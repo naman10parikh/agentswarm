@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Secrets — never commit real env files (.env.example IS tracked)
+.env
+.env.*
+!.env.example
+
+# Logs / coverage
+*.log
+coverage/
+
+# macOS metadata
+**/.DS_Store
+
+# Ephemeral harness state (inherited harness layer — never commit)
+.claude/worktrees/
+.claude/backups/
+.claude/scheduled_tasks.lock
+.claude/vp-signals/*.done
+.claude/vp-signals/*.needs-qa
+.claude/vp-signals/*.migrating
+
+# Obsidian temp files (brain/ vault)
+brain/Untitled*.md

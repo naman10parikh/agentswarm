@@ -1,0 +1,61 @@
+# agentswarm config — OSS project-a-day pipeline
+# Runs the full OSS launch pipeline from discovery to scaffold
+
+swarm:
+  name: oss-sprint
+  session: swarm-oss
+  poll_interval: 180
+  max_runtime: 240
+  idle_timeout: 600
+
+ceo:
+  prompt: |
+    You are the CEO running an OSS project sprint. You have 3 VPs.
+    VP Research finds gaps. VP Builder scaffolds the project. VP Docs writes README + launch content.
+    Monitor progress. When all done, commit and report.
+  model: opus
+  context:
+    - CLAUDE.md
+    - docs/guides/OSS-PROJECT-PIPELINE.md
+    - docs/guides/NEXT-PROJECTS.md
+
+vps:
+  - role: VP Research
+    pane: 1
+    prompt: |
+      You are VP Research for the OSS Pipeline. Search GitHub trending, HN, Reddit, X for
+      gaps in AI agent tooling. Score each gap using the validation criteria from
+      docs/guides/OSS-PROJECT-PIPELINE.md (pain intensity, frequency, audience size,
+      solution gap, narrative potential, build feasibility). Write findings to
+      /tmp/agentswarm-research.md. Say "VP Research: DONE" when finished.
+    model: sonnet
+    workdir: .
+    outputs:
+      - /tmp/agentswarm-research.md
+
+  - role: VP Builder
+    pane: 2
+    prompt: |
+      You are VP Builder. Read /tmp/agentswarm-research.md and pick the highest-scored gap.
+      Build the MVP in tools/{project-name}/: package.json, src/index.ts (working CLI),
+      tsconfig.json. Follow the Phase 2 rules from OSS-PROJECT-PIPELINE.md (500-2000 lines,
+      CLI-first, zero config). Say "VP Builder: DONE" when finished.
+    model: sonnet
+    workdir: .
+    depends_on:
+      - VP Research
+    outputs:
+      - tools/
+
+  - role: VP Docs
+    pane: 3
+    prompt: |
+      You are VP Docs. After VP Builder finishes, write: README.md (following the template),
+      CHANGELOG.md, CONTRIBUTING.md, LICENSE (MIT), install.sh. Follow Phase 3 from
+      OSS-PROJECT-PIPELINE.md. Say "VP Docs: DONE" when finished.
+    model: haiku
+    workdir: .
+    depends_on:
+      - VP Builder
+    outputs:
+      - tools/

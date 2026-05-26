@@ -1,0 +1,78 @@
+# agentswarm config — Content production swarm
+# This YAML defines a CEO + 4 VP roles that run concurrently in tmux panes
+
+swarm:
+  name: content-sprint
+  session: swarm-content
+  # How often the CEO checks on VP progress (seconds)
+  poll_interval: 120
+  # Max total runtime before auto-shutdown (minutes)
+  max_runtime: 180
+  # Kill idle panes after this many seconds of no output
+  idle_timeout: 300
+
+ceo:
+  # The CEO prompt is injected into the first pane
+  # It coordinates all VPs and makes strategic decisions
+  prompt: |
+    You are the CEO of a content production sprint. You have 4 VPs working in parallel.
+    Check their progress every 2 minutes. If any VP is stuck, reassign their work.
+    When all VPs report done, compile a summary and commit everything.
+  model: opus
+  # Files the CEO reads for context
+  context:
+    - CLAUDE.md
+    - docs/guides/OSS-PROJECT-PIPELINE.md
+
+vps:
+  - role: VP Research
+    pane: 1
+    prompt: |
+      You are VP Research. Search for trending AI agent topics on HN, X, and GitHub.
+      Write a research brief to content/research/trending-topics.md.
+      When done, say "VP Research: DONE" on your last line.
+    model: sonnet
+    workdir: .
+    outputs:
+      - content/research/trending-topics.md
+
+  - role: VP Writer
+    pane: 2
+    prompt: |
+      You are VP Writer. Wait for VP Research to finish (check content/research/trending-topics.md).
+      Then write 3 X articles based on the top topics.
+      Place them in content/x-articles/ with today's date prefix.
+      When done, say "VP Writer: DONE" on your last line.
+    model: sonnet
+    workdir: .
+    depends_on:
+      - VP Research
+    outputs:
+      - content/x-articles/
+
+  - role: VP Editor
+    pane: 3
+    prompt: |
+      You are VP Editor. Review all articles in content/x-articles/ from today.
+      Check for: bold inflation, generic openers, leverage recurrence, missing data.
+      Fix issues in-place. When done, say "VP Editor: DONE" on your last line.
+    model: sonnet
+    workdir: .
+    depends_on:
+      - VP Writer
+    outputs:
+      - content/x-articles/
+
+  - role: VP Distribution
+    pane: 4
+    prompt: |
+      You are VP Distribution. After VP Editor finishes, prepare cross-posting.
+      Generate thread versions of each article for X (25K char limit).
+      Write them to content/distribution/threads/.
+      When done, say "VP Distribution: DONE" on your last line.
+    model: haiku
+    workdir: .
+    depends_on:
+      - VP Editor
+    outputs:
+      - content/distribution/threads/

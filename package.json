@@ -1,0 +1,65 @@
+{
+  "name": "agentswarm",
+  "version": "0.2.0",
+  "description": "CEO orchestration for AI agent swarms. Define VP roles, deploy tasks to panes, monitor progress.",
+  "type": "module",
+  "bin": {
+    "agentswarm": "dist/ceo.js",
+    "agentswarm-sh": "src/cli.sh"
+  },
+  "main": "./dist/ceo.js",
+  "types": "./dist/ceo.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "examples/",
+    "install.sh",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "ceo": "tsx src/ceo.ts",
+    "start": "tsx src/ceo.ts",
+    "validate": "bash src/cli.sh validate examples/content-swarm.yaml",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "keywords": [
+    "ai-agent",
+    "orchestration",
+    "swarm",
+    "tmux",
+    "agentgrid",
+    "claude-code",
+    "multi-agent"
+  ],
+  "author": "Naman Parikh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naman10parikh/agentswarm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/naman10parikh/agentswarm/issues"
+  },
+  "homepage": "https://github.com/naman10parikh/agentswarm#readme",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^13.1.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
