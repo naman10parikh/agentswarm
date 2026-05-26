@@ -1,6 +1,6 @@
 #!/bin/bash
-# Energy Platform — Auto Chat-Switch Wrapper
-# Chairman Directive #19: Auto-create new chats when context degrades
+# Auto Chat-Switch Wrapper (inherited Energy harness)
+# Auto-creates new sessions when context degrades
 #
 # This script wraps Claude Code in a session loop. When Claude exits
 # (due to context degradation, rate limits, or completion), it captures
@@ -82,7 +82,7 @@ build_resume_prompt() {
   # Mode-specific instructions
   if [ "$MODE" = "--overnight" ]; then
     prompt+=$'\n'
-    prompt+="Resume autonomous overnight work. Chairman is sleeping."
+    prompt+="Resume autonomous overnight work. The maintainer is away."
     prompt+=$'\n'
     prompt+="Read .claude/handoff.md for exact state. Continue from where we left off."
     prompt+=$'\n'
