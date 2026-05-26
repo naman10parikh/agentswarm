@@ -1,4 +1,4 @@
-# Dogfood the Product — Use What We Build (Chairman Prompts #1, #14, #15, #21, #25, #39, #42, #43, #46, #47)
+# Dogfood the Product — Use What We Build (Maintainer Prompts #1, #14, #15, #21, #25, #39, #42, #43, #46, #47)
 
 ## The Rule
 
@@ -29,6 +29,6 @@ If you'd skip a skill, ask: "Am I rationalizing?"
 
 ## Evidence
 
-Chairman Prompt #14: "Harness in Container + Dogfood."
-Chairman Prompt #47: "Dogfood: memory system solves its own problems."
+Maintainer Prompt #14: "Harness in Container + Dogfood."
+Maintainer Prompt #47: "Dogfood: memory system solves its own problems."
 LEARNINGS.md: "Agent = Model + Harness. If you're not the model, you're the harness."

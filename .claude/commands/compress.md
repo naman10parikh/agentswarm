@@ -15,7 +15,7 @@ Ask the user which categories to save (or auto-detect from conversation):
 - Setup & config changes
 - Pending tasks
 - Errors & workarounds
-- Chairman directives
+- Maintainer directives
 
 ### Step 2: Create Session Log
 
@@ -57,7 +57,7 @@ status: completed
 - [ ] Task 1
 - [ ] Task 2
 
-## Chairman Directives (if any)
+## Maintainer Directives (if any)
 
 - Directive 1
 

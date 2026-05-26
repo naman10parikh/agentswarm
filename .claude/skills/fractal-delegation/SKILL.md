@@ -2,12 +2,12 @@
 
 ## Trigger
 
-Every task with 2+ independent workstreams, or any task that would take >15 minutes as solo work. Also triggered by chairman voice dumps with multiple requirements.
+Every task with 2+ independent workstreams, or any task that would take >15 minutes as solo work. Also triggered by maintainer voice dumps with multiple requirements.
 
 ## The Organizational Hierarchy
 
 ```
-CHAIRMAN (Naman) — Vision, capital, objective function
+MAINTAINER (the user) — Vision, capital, objective function
     │
 CEO (You — Opus) — Decompose, route, delegate, monitor, integrate
     │
@@ -96,9 +96,9 @@ YOU → Architecture decisions, final integration, production deploy
 
 **When:** Features spanning 3+ packages or requiring 5+ agents.
 
-### Pattern D: Chairman Directive Swarm (for voice dumps)
+### Pattern D: Maintainer Directive Swarm (for voice dumps)
 
-Full decomposition of a complex chairman directive.
+Full decomposition of a complex maintainer directive.
 
 ```
 1. CEO parses directive → extracts EVERY requirement
@@ -111,7 +111,7 @@ Full decomposition of a complex chairman directive.
 5. CEO commits stable checkpoint, updates handoff
 ```
 
-**When:** Chairman sends a multi-requirement voice dump.
+**When:** Maintainer sends a multi-requirement voice dump.
 
 ### Pattern E: Grid-Based Recursion (CEO-of-CEOs)
 
@@ -139,7 +139,7 @@ Each sub-CEO:
 
 - 10+ tasks across multiple domains
 - Each domain needs its own research → build → test cycle
-- Chairman says "recursive", "CEO of CEOs", or "sub-grids"
+- Maintainer says "recursive", "CEO of CEOs", or "sub-grids"
 - Overnight runs where maximizing parallelism matters
 
 **Decision:** Use Pattern E when you'd naturally say "this VP is really a CEO of its own team."
@@ -172,7 +172,7 @@ Borrowed from Agent Orchestrator (Composio):
 
 1. **Worker self-heal:** Agent retries on failure up to 3x with different approaches
 2. **VP mediate:** If worker fails, the team lead reviews and redirects
-3. **CEO escalate:** If VP can't resolve, CEO takes over (or escalates to chairman)
+3. **CEO escalate:** If VP can't resolve, CEO takes over (or escalates to maintainer)
 
 ## When NOT to Delegate
 

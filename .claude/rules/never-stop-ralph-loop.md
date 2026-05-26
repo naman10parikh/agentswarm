@@ -1,4 +1,4 @@
-# Never Stop / Ralph Loop — Relentless Execution (Chairman Prompts #10, #11, #17, #19, #21, #25, #28b, #37, #39b, #43, #45, #46, #47)
+# Never Stop / Ralph Loop — Relentless Execution (Maintainer Prompts #10, #11, #17, #19, #21, #25, #28b, #37, #39b, #43, #45, #46, #47)
 
 ## The Rule
 
@@ -19,7 +19,7 @@ Every worker — CEO, VP, builder, QA — operates in a Ralph Loop until DONE. N
 - Do NOT pause to ask "should I continue?" — just continue
 - Do NOT stop at "it compiles" — test as a user
 - Do NOT stop at first working version — polish until investor-grade
-- Do NOT wait for chairman input unless genuinely blocked (API keys, creds, business decisions)
+- Do NOT wait for maintainer input unless genuinely blocked (API keys, creds, business decisions)
 - If rate-limited, wait and resume automatically
 - If context degrades, write handoff and auto-switch to fresh session
 
@@ -35,10 +35,10 @@ Every worker — CEO, VP, builder, QA — operates in a Ralph Loop until DONE. N
 
 - "I've completed what I can" without exhausting alternatives
 - Stopping after one error without trying lateral approaches
-- Asking the chairman for guidance on things you can figure out
+- Asking the maintainer for guidance on things you can figure out
 - Declaring a task "blocked" without trying 3+ different approaches
 - Idle panes — every slot in the grid must be working
 
 ## Evidence
 
-Chairman has repeated "never stop" in 13 of 48 prompts. Session 64 hit 35 compactions because it kept going (too far). The balance: relentless execution WITH quality gates (test-before-signal, QA zero tolerance).
+Maintainer has repeated "never stop" in 13 of 48 prompts. Session 64 hit 35 compactions because it kept going (too far). The balance: relentless execution WITH quality gates (test-before-signal, QA zero tolerance).

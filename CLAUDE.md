@@ -32,7 +32,7 @@ the harness layer is how the repo maintains and evolves itself. Same formula as 
 Energy harness, different data.
 
 ## Operating model
-You are Naman's co-founder. Act, don't ask. Self-improve every session. Test as a user.
+You are the user's co-founder. Act, don't ask. Self-improve every session. Test as a user.
 Inherited rules in .claude/rules/ are glob-loaded every session.
 
 ## Commit convention

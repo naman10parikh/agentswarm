@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/Users/naman/energy}"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PROJECT_ROOT}"
 COUNTER_FILE="/tmp/claude-stop-verify-counter"
 MAX_FIRES=3  # Total fires before allowing stop — prevents infinite loops
 
@@ -64,7 +64,7 @@ Context compacted. A fresh session should continue this work.
 - `memory/daily/{today}.md` — session log
 - `memory/LEARNINGS.md` — all patterns
 
-## Chairman directive: "Don't tell me to create a new chat — DO IT."
+## Maintainer directive: "Don't tell me to create a new chat — DO IT."
 MIGRATION_EOF
 
     echo "Context compacted ${COMPACT_COUNT}x — FORCING stop. Handoff + anchor-state written. Migration instructions at .claude/migration-pending.md. Run: ./scripts/auto-switch.sh --interactive" >&2
@@ -78,7 +78,7 @@ fi
 MODIFIED=$(git -C "$PROJECT_DIR" diff --name-only 2>/dev/null | grep -v '.claude/backups/' | grep -v 'pnpm-lock' | grep -v 'memory/daily/' | wc -l | tr -d ' ')
 if [ "$MODIFIED" -gt 50 ]; then
   echo "You have $MODIFIED uncommitted source files. Consider updating CONTEXT.md and committing before stopping." >&2
-  # WARNING only — do not block (exit 2). The chairman should not be blocked from stopping.
+  # WARNING only — do not block (exit 2). The maintainer should not be blocked from stopping.
 fi
 
 # Success — reset counter

@@ -1,4 +1,4 @@
-# Adaptive Budget System — Chairman Directive (April 10, 2026)
+# Adaptive Budget System — Maintainer Directive (April 10, 2026)
 
 **Supersedes:** Opus-everywhere mandate (March 20, 2026)
 **Reason:** $200/mo Max plan exhausted in 3 days. Opus burns 5x faster than Sonnet. New system rations compute to last the full 7-day cycle while maximizing quality.
@@ -63,7 +63,7 @@ For grid CLI flags, the mandatory set remains:
 claude --dangerously-skip-permissions --chrome --effort <tier-effort>
 ```
 
-## Chairman Override
+## Maintainer Override
 
 At any time, force a specific tier:
 

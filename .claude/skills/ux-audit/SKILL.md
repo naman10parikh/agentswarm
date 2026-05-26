@@ -6,7 +6,7 @@ description: Systematic UX audit for Spark and Energy platform. Checks component
 ## When to Use
 
 - After building or modifying any UI component
-- Before presenting work to Naman
+- Before presenting work to the user
 - As part of /wrap-up session protocol
 - When onboarding a new page to the platform
 

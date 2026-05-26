@@ -30,7 +30,7 @@ Store a persistent fact via MCP memory server.
 **Steps:**
 
 1. Use the `memory` MCP tool: `create_entities` with entity type based on content
-2. For chairman directives: entity type = "directive"
+2. For maintainer directives: entity type = "directive"
 3. For technical patterns: entity type = "pattern"
 4. For project state: entity type = "project"
 5. Confirm storage with entity name
@@ -55,7 +55,7 @@ Recall everything known about a topic across all surfaces.
 **Steps:**
 
 1. Search memory surfaces (same as `/memory search`)
-2. Also search: .claude/auto-memory files, vault notes, chairman prompts
+2. Also search: .claude/auto-memory files, vault notes, maintainer prompts
 3. Check MCP memory server for stored entities matching topic
 4. Combine and deduplicate results
 5. Present as structured brief: what we know, when we learned it, confidence level

@@ -1,4 +1,4 @@
-# Error Post-Mortem — Extract the Rule, Prevent the Repeat (Chairman Prompts #17, #19, #20, #25, #27a, #34)
+# Error Post-Mortem — Extract the Rule, Prevent the Repeat (Maintainer Prompts #17, #19, #20, #25, #27a, #34)
 
 ## The Rule
 
@@ -28,6 +28,6 @@ After EVERY error fix, run this post-mortem. No exceptions.
 
 ## Evidence
 
-Chairman Prompt #17: "Self-improve continuously — every error is a gift."
-Chairman Prompt #25: "Root cause analysis, not symptoms."
+Maintainer Prompt #17: "Self-improve continuously — every error is a gift."
+Maintainer Prompt #25: "Root cause analysis, not symptoms."
 Session 64: 35 compactions, no post-mortems → catastrophic quality degradation.

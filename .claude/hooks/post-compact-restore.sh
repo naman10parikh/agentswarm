@@ -2,8 +2,8 @@
 # Post-Compaction Context Restore V2 — fires via SessionStart with "compact" matcher.
 # Injects critical context back into Claude's awareness after auto-compaction.
 #
-# V2 upgrades (chairman mandate #9):
-#   - Includes chairman prompt titles for continuity
+# V2 upgrades (maintainer mandate #9):
+#   - Includes maintainer prompt titles for continuity
 #   - Includes skills/tools inventory count
 #   - Includes handoff doc if exists (bridges sessions)
 #
@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/Users/naman/energy}"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PROJECT_ROOT}"
 ANCHOR_FILE="$PROJECT_DIR/.claude/anchor-state.md"
 TODAY=$(date '+%Y-%m-%d')
 DAILY_FILE="$PROJECT_DIR/memory/daily/$TODAY.md"
@@ -29,8 +29,8 @@ if [ -f "$SESSION_COUNTER" ]; then
   if [ "$COUNT" -ge 1 ]; then
     echo ""
     echo "**HARD STOP: Context has been compacted ${COUNT} times this session.**"
-    echo "**Chairman Directive #16: STOP at 1 compaction. 35 compactions in session 64 was unacceptable.**"
-    echo "**IMMEDIATELY: Write /handoff, tell chairman to start new chat. DO NOT continue working.**"
+    echo "**Maintainer Directive #16: STOP at 1 compaction. 35 compactions in session 64 was unacceptable.**"
+    echo "**IMMEDIATELY: Write /handoff, tell maintainer to start new chat. DO NOT continue working.**"
   else
     echo "First compaction. Next one triggers HARD STOP per Directive #16."
     echo "Finish current task quickly, then write handoff proactively."
@@ -52,7 +52,7 @@ if [ -f "$ANCHOR_FILE" ]; then
   echo ""
 fi
 
-# 4. Recent daily log entries (contains chairman's recent directives)
+# 4. Recent daily log entries (contains maintainer's recent directives)
 if [ -f "$DAILY_FILE" ]; then
   echo "=== TODAY'S LOG (last 40 lines) ==="
   tail -40 "$DAILY_FILE"
@@ -66,9 +66,9 @@ if [ -f "$HANDOFF_FILE" ]; then
   echo ""
 fi
 
-# 6. Chairman prompts summary (know what the chairman cares about)
-echo "=== CHAIRMAN PROMPTS (titles) ==="
-for f in $(find "$PROJECT_DIR/resources/chairman-prompts" -name "*.md" -type f 2>/dev/null | sort); do
+# 6. Maintainer prompts summary (know what the maintainer cares about)
+echo "=== MAINTAINER PROMPTS (titles) ==="
+for f in $(find "$PROJECT_DIR/resources/maintainer-prompts" -name "*.md" -type f 2>/dev/null | sort); do
   TITLE=$(head -1 "$f" | sed 's/^# //')
   echo "  - $(basename "$f"): $TITLE"
 done
@@ -99,7 +99,7 @@ if [ -f "$SESSION_COUNTER" ] && [ "$(cat "$SESSION_COUNTER")" -ge 1 ]; then
   echo ">>> You MUST do ONLY these 3 things, in order:"
   echo ">>>   1. Write handoff doc (.claude/handoff.md)"
   echo ">>>   2. Commit any uncommitted work"
-  echo ">>>   3. Tell chairman: 'Context compacted $(cat "$SESSION_COUNTER")x — start a new chat.'"
+  echo ">>>   3. Tell maintainer: 'Context compacted $(cat "$SESSION_COUNTER")x — start a new chat.'"
   echo ">>> DO NOT continue feature work. DO NOT start new tasks."
   echo ">>> DO NOT ignore this instruction. Session 86 hit 21 compactions because this was ignored."
 else
@@ -115,10 +115,10 @@ else
     echo ">>> The mission files ARE your next action."
   else
     echo "1. Read the active task above and RESUME working on it"
-    echo "2. Do NOT ask the chairman what to do — the task file tells you"
+    echo "2. Do NOT ask the maintainer what to do — the task file tells you"
   fi
   echo "3. Use sub-agents for research to preserve your context window"
-  echo "4. Chairman prompts are SACRED — if recent one exists, address it first"
+  echo "4. Maintainer prompts are SACRED — if recent one exists, address it first"
   echo "5. Next compaction triggers HARD STOP — work efficiently"
 fi
 echo "=== END COMPACTION RESTORE ==="

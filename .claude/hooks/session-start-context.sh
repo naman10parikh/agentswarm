@@ -1,11 +1,11 @@
 #!/bin/bash
 # Injects full context on session start — V3 (March 7, 2026).
-# Chairman mandate #9: ingest the ENTIRE repo, not just current work.
+# Maintainer mandate #9: ingest the ENTIRE repo, not just current work.
 # Auto-detects unread resources, reports staleness, loads everything Claude needs.
 
 set -euo pipefail
 
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/Users/naman/energy}"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PROJECT_ROOT}"
 TODAY=$(date '+%Y-%m-%d')
 DAILY_FILE="$PROJECT_DIR/memory/daily/$TODAY.md"
 
@@ -19,17 +19,17 @@ if [ -f "$PROJECT_DIR/CONTEXT.md" ]; then
 fi
 
 echo ""
-echo "=== CHAIRMAN CHECKLIST (What Naman Needs To Do) ==="
-if [ -f "$PROJECT_DIR/CHAIRMAN-CHECKLIST.md" ]; then
-  cat "$PROJECT_DIR/CHAIRMAN-CHECKLIST.md"
+echo "=== MAINTAINER CHECKLIST (What the user Needs To Do) ==="
+if [ -f "$PROJECT_DIR/MAINTAINER-CHECKLIST.md" ]; then
+  cat "$PROJECT_DIR/MAINTAINER-CHECKLIST.md"
 fi
 
 echo ""
-echo "=== CHAIRMAN PROMPTS SUMMARY ==="
-PROMPT_COUNT=$(find "$PROJECT_DIR/resources/chairman-prompts" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
-echo "Total chairman prompts: $PROMPT_COUNT"
+echo "=== MAINTAINER PROMPTS SUMMARY ==="
+PROMPT_COUNT=$(find "$PROJECT_DIR/resources/maintainer-prompts" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+echo "Total maintainer prompts: $PROMPT_COUNT"
 # List all prompts with first line (title) for quick reference
-for f in $(find "$PROJECT_DIR/resources/chairman-prompts" -name "*.md" -type f 2>/dev/null | sort); do
+for f in $(find "$PROJECT_DIR/resources/maintainer-prompts" -name "*.md" -type f 2>/dev/null | sort); do
   TITLE=$(head -1 "$f" | sed 's/^# //')
   echo "  - $(basename "$f"): $TITLE"
 done
@@ -98,7 +98,7 @@ SKILL_COUNT=$(find "$PROJECT_DIR/.claude/skills" -name "SKILL.md" -type f 2>/dev
 RULE_COUNT=$(find "$PROJECT_DIR/.claude/rules" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
 AGENT_COUNT=$(find "$PROJECT_DIR/.claude/agents" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
 RESOURCE_COUNT=$(find "$PROJECT_DIR/resources/read" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
-echo "Skills: $SKILL_COUNT | Rules: $RULE_COUNT | Sub-agents: $AGENT_COUNT | Resources: $RESOURCE_COUNT | Chairman prompts: $PROMPT_COUNT"
+echo "Skills: $SKILL_COUNT | Rules: $RULE_COUNT | Sub-agents: $AGENT_COUNT | Resources: $RESOURCE_COUNT | Maintainer prompts: $PROMPT_COUNT"
 
 # MCP config summary
 if [ -f "$PROJECT_DIR/.mcp.json" ]; then
@@ -128,7 +128,7 @@ if [ -f "$ANCHOR_FILE" ]; then
     cat "$ANCHOR_FILE"
     echo ""
     echo ">>> IMPORTANT: Context was recently compacted. Read the anchor state above to recover."
-    echo ">>> If compaction count >= 3, TELL the chairman to start a new chat."
+    echo ">>> If compaction count >= 3, TELL the maintainer to start a new chat."
   else
     echo ""
     echo "=== NOTE: Stale anchor state found (${ANCHOR_AGE}m old). Ignoring. ==="
@@ -202,7 +202,7 @@ echo "Topic files: $TOPIC_COUNT | Use /memory search before starting work."
 
 echo ""
 echo "=== ARCHITECTURE REFERENCE ==="
-echo "Read docs/vision/the_complete_story.md lines 1-230 for the full TLDR + architecture."
+echo "Read docs/vision/VISION.md lines 1-230 for the full TLDR + architecture."
 echo "Read docs/architecture/SWARM-ARCHITECTURE.md for the meta-orchestration framework."
 
 echo ""

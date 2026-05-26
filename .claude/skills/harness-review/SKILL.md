@@ -48,4 +48,4 @@ Same model with scaffold A scores 42%. Same model with scaffold B scores 78%. Th
 
 ## Reference
 
-Read `docs/vision/the_complete_story.md` — search for "harness engineering evidence"
+Read `docs/vision/VISION.md` — search for "harness engineering evidence"

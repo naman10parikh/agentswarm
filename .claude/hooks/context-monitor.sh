@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/Users/naman/energy}"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PROJECT_ROOT}"
 TODAY=$(date '+%Y-%m-%d')
 WARNINGS=""
 

@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/Users/naman/energy}"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PROJECT_ROOT}"
 MEMORY_DIR="$PROJECT_DIR/memory"
 DAILY_DIR="$MEMORY_DIR/daily"
 TODAY=$(date '+%Y-%m-%d')

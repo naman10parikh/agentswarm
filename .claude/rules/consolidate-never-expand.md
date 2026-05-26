@@ -1,4 +1,4 @@
-# Consolidate, Never Expand — One Source of Truth (Chairman Prompts #37, #39b, #40, #41, #42, #48)
+# Consolidate, Never Expand — One Source of Truth (Maintainer Prompts #37, #39b, #40, #41, #42, #48)
 
 ## The Rule
 
@@ -18,7 +18,7 @@ WEAVE into existing documents. Never create new standalone files for daily intak
 - **Archive** old content to `archive/` directories — never delete
 - **Consolidate** when multiple files cover same topic — merge into one, archive rest
 
-## Chairman's Test
+## Maintainer's Test
 
 > "Can I find this if I leave for a week and come back?"
 
@@ -28,7 +28,7 @@ If the answer requires checking 5 similar docs, consolidation has failed.
 
 | Content Type         | Destination                               |
 | -------------------- | ----------------------------------------- |
-| Architecture insight | `docs/vision/the_complete_story.md`       |
+| Architecture insight | `docs/vision/VISION.md`       |
 | Error/pattern        | `memory/LEARNINGS.md`                     |
 | Operating rule       | `CLAUDE.md` + `.claude/rules/`            |
 | Tool/MCP discovery   | Install immediately + update skill        |
@@ -39,12 +39,12 @@ If the answer requires checking 5 similar docs, consolidation has failed.
 ## Anti-Patterns
 
 - Creating `research-memory-2026-03-21.md` instead of updating LEARNINGS.md
-- Creating `architecture-v3.md` instead of updating the_complete_story.md
+- Creating `architecture-v3.md` instead of updating VISION.md
 - Having 3 files that all explain "how agents work"
 - Duplicating content between vault notes and source files
 
 ## Evidence
 
-Chairman Prompt #40: "Recursive repo audit, zero detail removal, consolidate."
-Chairman Prompt #48: "Weave insights, don't create standalone."
+Maintainer Prompt #40: "Recursive repo audit, zero detail removal, consolidate."
+Maintainer Prompt #48: "Weave insights, don't create standalone."
 LEARNINGS.md: "Single source of truth per topic — NO V2/V3 separate docs" (line 672).

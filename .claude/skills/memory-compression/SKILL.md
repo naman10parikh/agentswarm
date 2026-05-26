@@ -216,7 +216,7 @@ const systemWithCache = [
 
 ### Compact Instructions (in CLAUDE.md)
 
-Always preserve: chairman's recent messages, active task, file paths, decisions, errors, API status, sprint progress.
+Always preserve: maintainer's recent messages, active task, file paths, decisions, errors, API status, sprint progress.
 Always drop: tool outputs, search results, debugging steps, file contents (keep path+line only).
 
 ### Compaction Trigger

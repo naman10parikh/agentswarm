@@ -1,8 +1,8 @@
-# Auto-Migration — Don't Tell Me, Do It (Chairman Prompt #53)
+# Auto-Migration — Don't Tell Me, Do It (Maintainer Prompt #53)
 
 ## The Rule
 
-When context degrades (1 compaction), the system MUST automatically migrate to a fresh session. DO NOT just tell the chairman "please start a new chat." The system should handle migration autonomously.
+When context degrades (1 compaction), the system MUST automatically migrate to a fresh session. DO NOT just tell the maintainer "please start a new chat." The system should handle migration autonomously.
 
 ## Migration Paths (In Priority Order)
 
@@ -29,8 +29,8 @@ When auto-switch.sh is NOT running:
 3. Stop hook uses RemoteTrigger to schedule an immediate remote session:
    ```
    RemoteTrigger(action: "create", body: {
-     prompt: "Read /Users/naman/energy/.claude/handoff.md and continue work.",
-     project_path: "/Users/naman/energy"
+     prompt: "Read $PROJECT_ROOT/.claude/handoff.md and continue work.",
+     project_path: "$PROJECT_ROOT"
    })
    ```
 4. Claude writes to terminal: "Context migrating. Remote session spawned. Check Claude dashboard."
@@ -52,10 +52,10 @@ The handoff MUST be tight enough that the new session continues seamlessly:
 
 1. **Active company:** name, grid layout, worker pane IDs, what each is doing NOW
 2. **Active task:** exact file being edited, line numbers, what's left
-3. **Decisions made:** architectural choices, chairman corrections, trade-offs resolved
+3. **Decisions made:** architectural choices, maintainer corrections, trade-offs resolved
 4. **Files changed:** full list with brief description of each change
 5. **Next 3 actions:** exact steps to take after loading context
-6. **Blocker state:** current CHAIRMAN-CHECKLIST.md blockers
+6. **Blocker state:** current MAINTAINER-CHECKLIST.md blockers
 
 ## Pre-Compact Hook Responsibilities
 
@@ -69,7 +69,7 @@ The pre-compact-memory-flush.sh MUST:
 
 ## Anti-Patterns
 
-- Telling the chairman "please start a new chat" (the WHOLE POINT is autonomous migration)
+- Telling the maintainer "please start a new chat" (the WHOLE POINT is autonomous migration)
 - Writing a vague handoff ("I was working on stuff")
 - Not including file paths in the handoff
 - Continuing to work past 1 compaction (quality is already degraded)

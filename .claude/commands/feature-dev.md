@@ -6,7 +6,7 @@ Full feature development lifecycle for: $ARGUMENTS
 
 - Check if similar feature exists in the codebase
 - Search ecosystem repos for reference implementations (use /ecosystem-reference skill)
-- Review the_complete_story.md for architectural guidance
+- Review VISION.md for architectural guidance
 - Check memory/LEARNINGS.md for relevant past learnings
 
 ### 2. Plan Phase

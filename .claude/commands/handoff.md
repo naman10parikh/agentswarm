@@ -25,12 +25,12 @@ Create a handoff document at `.claude/handoff.md` (OVERWRITE the existing one) w
 - Include: files modified, features added, bugs fixed, research done
 - Be specific — file paths and line numbers
 
-## Chairman Directives Status (ALL — 001 through latest)
+## Maintainer Directives Status (ALL — 001 through latest)
 
 | #   | Directive | Status |
 | --- | --------- | ------ |
 
-For EVERY directive in `resources/chairman-prompts/`, report: DONE / IN PROGRESS / BLOCKED / NOT STARTED
+For EVERY directive in `resources/maintainer-prompts/`, report: DONE / IN PROGRESS / BLOCKED / NOT STARTED
 
 ## Key Files Modified (Uncommitted)
 
@@ -43,9 +43,9 @@ List every modified file with a 1-line description
 
 Numbered list of what to do next, in order of impact
 
-## Chairman's Vision Summary
+## Maintainer's Vision Summary
 
-1-2 paragraph summary of the chairman's overall direction (from latest directives)
+1-2 paragraph summary of the maintainer's overall direction (from latest directives)
 
 ## Critical Rules (ENFORCED)
 
@@ -82,7 +82,7 @@ ALSO do these:
    - Any errors or blockers encountered
    - The specific next action to take
    - This file gets auto-injected into the next session's context by the SessionStart hook
-5. If this handoff is due to compaction (context degraded), tell the chairman:
+5. If this handoff is due to compaction (context degraded), tell the maintainer:
    "Context degraded — start a new chat. Run `/start` and everything will be injected."
 
 ## Auto-Switch Support

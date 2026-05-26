@@ -13,7 +13,7 @@ Every vault note MUST have YAML frontmatter:
 
 ```yaml
 ---
-type: architecture | research | agent | moc | operations | harness | chairman-prompt
+type: architecture | research | agent | moc | operations | harness | maintainer-prompt
 status: active | archived | superseded
 created: YYYY-MM-DD
 tags: [tag1, tag2]
@@ -30,7 +30,7 @@ source: path/to/source/file
 
 ## Update Protocol
 
-When the chairman says "change X", update ALL of these:
+When the maintainer says "change X", update ALL of these:
 
 1. CLAUDE.md (if permanent rule)
 2. .claude/rules/{topic}.md (if domain-specific)

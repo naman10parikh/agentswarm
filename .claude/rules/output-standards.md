@@ -1,8 +1,8 @@
-# Output Standards — Chairman Updates + VP Output Hygiene (Chairman Prompt #53)
+# Output Standards — Maintainer Updates + VP Output Hygiene (Maintainer Prompt #53)
 
-## Part 1: Chairman Output Format
+## Part 1: Maintainer Output Format
 
-Every status update to the chairman MUST follow this format. Simple language. No jargon. Lead with what matters. The chairman should understand the entire state in 60 seconds.
+Every status update to the maintainer MUST follow this format. Simple language. No jargon. Lead with what matters. The maintainer should understand the entire state in 60 seconds.
 
 ### Standard Status Update Format
 
@@ -17,7 +17,7 @@ Every status update to the chairman MUST follow this format. Simple language. No
 
 {Bullet list: completed items with evidence (screenshots, test results)}
 
-## Blockers (Chairman Action Needed)
+## Blockers (Maintainer Action Needed)
 
 {Numbered list with EXACT action steps — URL, button to click, amount to add}
 {If no blockers: "None — all systems operational"}
@@ -36,28 +36,28 @@ Every status update to the chairman MUST follow this format. Simple language. No
 
 - At session start (after deep ingest)
 - At session end (before handoff)
-- When presenting company results to chairman
+- When presenting company results to maintainer
 - When requested via /status
 - In .claude/vp-outputs/ceo-log.md (abbreviated version)
 
 ### Blockers File
 
-CHAIRMAN-CHECKLIST.md is the ONE file for all blockers. Do NOT scatter blockers across:
+MAINTAINER-CHECKLIST.md is the ONE file for all blockers. Do NOT scatter blockers across:
 
 - VP output files
 - CEO logs
 - Daily memory files
 - Handoff documents
 
-All these may MENTION blockers, but CHAIRMAN-CHECKLIST.md is the canonical source.
+All these may MENTION blockers, but MAINTAINER-CHECKLIST.md is the canonical source.
 
-### Anti-Patterns (Chairman Output)
+### Anti-Patterns (Maintainer Output)
 
-- Using technical jargon the chairman wouldn't understand
+- Using technical jargon the maintainer wouldn't understand
 - Burying blockers in long paragraphs
 - Reporting "338 tasks complete" without evidence of working features
 - Status updates longer than 1 page
-- Creating new blocker files instead of updating CHAIRMAN-CHECKLIST.md
+- Creating new blocker files instead of updating MAINTAINER-CHECKLIST.md
 
 ---
 

@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/Users/naman/energy}"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$PROJECT_ROOT}"
 MEMORY_DIR="$PROJECT_DIR/memory"
 DAILY_DIR="$MEMORY_DIR/daily"
 BACKUP_DIR="$PROJECT_DIR/.claude/backups"
@@ -146,18 +146,18 @@ TERMINAL_CONTEXT="${CLAUDE_TERMINAL_CONTEXT:-unknown}"
   echo ""
   if [ "$COUNT" -ge 1 ]; then
     echo "**CRITICAL: Context has been compacted $COUNT times this session.**"
-    echo "**HARD RULE (Chairman Directive #16): STOP — migrate to fresh chat after 1 compaction.**"
-    echo "**Write handoff doc. Tell the chairman:**"
+    echo "**HARD RULE (Maintainer Directive #16): STOP — migrate to fresh chat after 1 compaction.**"
+    echo "**Write handoff doc. Tell the maintainer:**"
     echo "**'Context compacted ${COUNT}x — quality is degrading. Start a new chat. Handoff written.'**"
     echo "**DO NOT continue working past this point. 35 compactions in session 64 was unacceptable.**"
   else
-    echo "First compaction. One more triggers HARD STOP per Chairman Directive #16."
+    echo "First compaction. One more triggers HARD STOP per Maintainer Directive #16."
     echo "Finish current task quickly, write handoff doc proactively."
   fi
   echo ""
-  echo "## Chairman Prompts (titles — know what he cares about)"
+  echo "## Maintainer Prompts (titles — know what he cares about)"
   echo ""
-  for f in $(find "$PROJECT_DIR/resources/chairman-prompts" -name "*.md" -type f 2>/dev/null | sort); do
+  for f in $(find "$PROJECT_DIR/resources/maintainer-prompts" -name "*.md" -type f 2>/dev/null | sort); do
     TITLE=$(head -1 "$f" | sed 's/^# //')
     echo "  - $(basename "$f"): $TITLE"
   done

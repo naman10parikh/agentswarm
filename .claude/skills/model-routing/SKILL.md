@@ -11,7 +11,7 @@ description: Adaptive budget-aware model routing. Manages 4-tier system to maxim
 - When starting overnight/long-running autonomous sessions
 - When you want to check or change the current budget tier
 
-## Adaptive Budget System (Chairman Directive — April 10, 2026)
+## Adaptive Budget System (Maintainer Directive — April 10, 2026)
 
 The $200/mo Max plan has a weekly rolling limit. Opus burns ~5x faster than Sonnet. Without management, budget exhausts in 3 days.
 

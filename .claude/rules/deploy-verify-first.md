@@ -1,4 +1,4 @@
-# Deploy & Verify First — Production Before Showing (Chairman Prompts #6, #12, #20, #21, #25, #29b)
+# Deploy & Verify First — Production Before Showing (Maintainer Prompts #6, #12, #20, #21, #25, #29b)
 
 ## The Rule
 
@@ -9,8 +9,8 @@ Nothing is "done" until it's deployed to production AND verified from a user's p
 1. **Build** — `pnpm build` passes with 0 TypeScript errors
 2. **Deploy** — Push to main (auto-deploys via GitHub Action) or `npx vercel --prod --token=$VERCEL_TOKEN --yes`
 3. **Verify** — curl prod endpoints AND/OR screenshot the live URL
-4. **Show** — Only THEN present to the chairman
-5. **Approve** — Chairman confirms → mark as stable checkpoint
+4. **Show** — Only THEN present to the maintainer
+5. **Approve** — Maintainer confirms → mark as stable checkpoint
 
 ## Verification Checklist
 
@@ -38,7 +38,7 @@ The PostToolUse hook automatically checks deploy status. If it fails:
 
 ## Evidence
 
-Chairman Prompt #6: "Checkpoint Wins for the Board" — show deployed, working product.
-Chairman Prompt #12: "Build → Show → Approval → Checkpoint → Next."
-Chairman Prompt #25: "Board demo quality — must work live on prod."
+Maintainer Prompt #6: "Checkpoint Wins for the Board" — show deployed, working product.
+Maintainer Prompt #12: "Build → Show → Approval → Checkpoint → Next."
+Maintainer Prompt #25: "Board demo quality — must work live on prod."
 LEARNINGS.md: "Never work hours without verifying production reflects changes" (line 486).

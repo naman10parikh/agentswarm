@@ -6,7 +6,7 @@ description: Auto-generate new skills from learnings, approved patterns, and rep
 ## When to Use
 
 - After discovering a repeatable pattern across 2+ sessions
-- When Naman explicitly approves a workflow ("always do X")
+- When the user explicitly approves a workflow ("always do X")
 - When LEARNINGS.md has 3+ entries about the same topic
 - When a sub-agent finds a new capability worth capturing
 - During AutoLab nightly improvement cycles

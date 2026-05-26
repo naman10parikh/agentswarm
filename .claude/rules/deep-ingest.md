@@ -1,4 +1,4 @@
-# Deep Ingest Before Execution — Read Everything First (Chairman Prompts #9, #37, #38, #40, #42, #43, #46, #47, #48)
+# Deep Ingest Before Execution — Read Everything First (Maintainer Prompts #9, #37, #38, #40, #42, #43, #46, #47, #48)
 
 ## The Rule
 
@@ -13,7 +13,7 @@ Before executing ANY non-trivial task, deeply ingest all relevant context. 15-20
 5. Read `.claude/handoff.md` (if exists — session continuity)
 6. Read `memory/daily/YYYY-MM-DD.md` (today's log)
 7. Check `resources/unread/` (process if files exist)
-8. Read relevant chairman prompts (if new directive)
+8. Read relevant maintainer prompts (if new directive)
 
 ## Worker Boot Sequence
 
@@ -31,23 +31,23 @@ Before implementing, debate internally:
 - What could go wrong?
 - Is there a simpler approach?
 - Have we solved this before? (check LEARNINGS.md)
-- What would the chairman critique?
+- What would the maintainer critique?
 
 ## Anti-Patterns
 
 - Starting to code before reading existing implementation
 - Skipping LEARNINGS.md and repeating a known mistake
-- Ignoring chairman prompts that set direction
+- Ignoring maintainer prompts that set direction
 - "I already know what to do" — you might, but verify first
 - Shallow reading (skimming titles instead of reading content)
 
 ## Plan Mode
 
-For non-trivial tasks, enter plan mode BEFORE executing. Walk through structure, debate trade-offs with the chairman or CEO. THEN execute deterministically.
+For non-trivial tasks, enter plan mode BEFORE executing. Walk through structure, debate trade-offs with the maintainer or CEO. THEN execute deterministically.
 
 ## Evidence
 
-Chairman Prompt #37: "Deep ingest (15-20 min), armed to the teeth."
-Chairman Prompt #42: "Complete vault knowledge graph before executing."
-Chairman Prompt #47: "Research every memory project before building."
+Maintainer Prompt #37: "Deep ingest (15-20 min), armed to the teeth."
+Maintainer Prompt #42: "Complete vault knowledge graph before executing."
+Maintainer Prompt #47: "Research every memory project before building."
 LEARNINGS.md: "Deep ingest > quick boot — read 10+ files at CEO boot (~20.5K tokens)" (line 728).

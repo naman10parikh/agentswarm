@@ -1,8 +1,8 @@
-# Context Thread Preservation — Seamless Chat Migration (Chairman Prompt #47)
+# Context Thread Preservation — Seamless Chat Migration (Maintainer Prompt #47)
 
 ## The Rule
 
-When context degrades (1 compaction), the CEO MUST migrate to a fresh chat WITHOUT losing any thread of work. One compaction already loses 70-80% of detail — waiting for a second means 91-96% loss. The migration must be invisible to the chairman — work continues seamlessly.
+When context degrades (1 compaction), the CEO MUST migrate to a fresh chat WITHOUT losing any thread of work. One compaction already loses 70-80% of detail — waiting for a second means 91-96% loss. The migration must be invisible to the maintainer — work continues seamlessly.
 
 ## The "Reptile Shedding Skin" Protocol
 
@@ -42,7 +42,7 @@ When a WORKER hits context degradation:
 | --------- | ------------------------------------- | ------------------------------------------ | -------------------- |
 | Files     | Handoff, anchor, daily log, LEARNINGS | Filesystem                                 | Always               |
 | MCP Graph | Active tasks, decisions, patterns     | memory-enhanced JSONL + server-memory JSON | Across sessions      |
-| Rules     | Chairman patterns, operating model    | .claude/rules/\*.md                        | Always (glob-loaded) |
+| Rules     | Maintainer patterns, operating model    | .claude/rules/\*.md                        | Always (glob-loaded) |
 | Vault     | Architecture, research, project state | vault/\*.md                                | Always               |
 
 ## Anti-Patterns
@@ -54,7 +54,7 @@ When a WORKER hits context degradation:
 
 ## Evidence
 
-- Chairman Prompt #47: "reptile shedding skin" metaphor
+- Maintainer Prompt #47: "reptile shedding skin" metaphor
 - Session 64: 35 compactions proved context death is real
 - Research (GitHub #34685): quality degrades at 40-50% of 1M window
 - auto-switch.sh: proven across 10+ overnight runs

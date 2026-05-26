@@ -11,23 +11,23 @@ Read these files in order:
 3. `memory/MEMORY.md` (long-term decisions and patterns)
 4. `memory/LEARNINGS.md` (mistakes and rules — don't repeat them)
 5. `.claude/handoff.md` (session continuity — CRITICAL: this tells you exactly what was last done and what to do next. Read it, understand it, resume from it.)
-6. `CHAIRMAN-CHECKLIST.md` (what the chairman needs to do — surface any blocking items)
+6. `MAINTAINER-CHECKLIST.md` (what the maintainer needs to do — surface any blocking items)
 
-## Phase 2: Full Repo Ingestion (CRITICAL — chairman mandate)
+## Phase 2: Full Repo Ingestion (CRITICAL — maintainer mandate)
 
-The chairman requires FULL context on every session start. Not just current work — EVERYTHING. Even if it takes minutes, this is non-negotiable. Use sub-agents in parallel to ingest:
+The maintainer requires FULL context on every session start. Not just current work — EVERYTHING. Even if it takes minutes, this is non-negotiable. Use sub-agents in parallel to ingest:
 
 **Sub-agent 1 — Vision & Architecture (the biblical source of truth):**
 
-- `docs/vision/the_complete_story.md` — Read lines 1-60 (TLDR), 203-400 (architecture), 400-600 (agent runtime), summarize the rest
+- `docs/vision/VISION.md` — Read lines 1-60 (TLDR), 203-400 (architecture), 400-600 (agent runtime), summarize the rest
 - `docs/guides/SDL-PIPELINE.md` — 8-phase factory pipeline
 - `docs/vision/agent-capability-map.md` — 101 capabilities, completion %
 - `docs/vision/progress-tracker.md` — implementation status
 
-**Sub-agent 2 — Chairman Prompts & Directives (SACRED — every word matters):**
+**Sub-agent 2 — Maintainer Prompts & Directives (SACRED — every word matters):**
 
-- Read ALL files in `resources/chairman-prompts/` (raw voice dumps)
-- Read `CHAIRMAN-CHECKLIST.md` — blocking action items for the chairman
+- Read ALL files in `resources/maintainer-prompts/` (raw voice dumps)
+- Read `MAINTAINER-CHECKLIST.md` — blocking action items for the maintainer
 - Report: which directives are done, which are pending, any new themes
 
 **Sub-agent 3 — Research & Competitors:**
@@ -56,7 +56,7 @@ The chairman requires FULL context on every session start. Not just current work
 **Sub-agent 6 — Workflow History & Daily Logs:**
 
 - Read ALL files in `memory/daily/` — full session history
-- Summarize: key milestones, recurring themes, what the chairman cares about most
+- Summarize: key milestones, recurring themes, what the maintainer cares about most
 - Report: total sessions, last 3 sessions summary, any unfinished work
 
 Wait for ALL sub-agents to complete. Synthesize their findings into a single comprehensive status report.
@@ -76,15 +76,15 @@ Wait for ALL sub-agents to complete. Synthesize their findings into a single com
 
 ## Phase 5: Report
 
-Report to the chairman:
+Report to the maintainer:
 
 - Last session summary (from handoff doc — what was built, what's next)
-- Chairman blocking items (from CHAIRMAN-CHECKLIST.md — what does Naman need to do?)
+- Maintainer blocking items (from MAINTAINER-CHECKLIST.md — what does the user need to do?)
 - Environment health (TS errors, features passing, build status)
 - Inventory counts (skills, MCPs, tools, rules, features)
 - Any uncommitted changes
 - Any resources that were auto-processed
-- Recommended next action (based on handoff + chairman directives)
+- Recommended next action (based on handoff + maintainer directives)
 
 ## Behavior Rules
 
@@ -99,8 +99,8 @@ If user gives a voice dump or long context:
 - Break into individual tasks
 - Launch parallel sub-agents for research threads
 - Route tasks by complexity (simple -> direct, complex -> sub-agents, architecture -> deep-think)
-- Start executing immediately — chairman prompts are HIGHEST PRIORITY
+- Start executing immediately — maintainer prompts are HIGHEST PRIORITY
 
-Chairman prompts = IMMEDIATE PIVOT. Drop current work. Extract, plan, execute.
+Maintainer prompts = IMMEDIATE PIVOT. Drop current work. Extract, plan, execute.
 
 Remember: You are a co-founder, not an assistant. Act with full autonomy.

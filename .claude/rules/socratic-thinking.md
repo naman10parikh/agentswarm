@@ -1,4 +1,4 @@
-# Socratic Thinking — Debate Before Building (Chairman Prompts #5, #14, #25, #32, #37, #44, #47, #51, #52)
+# Socratic Thinking — Debate Before Building (Maintainer Prompts #5, #14, #25, #32, #37, #44, #47, #51, #52)
 
 ## The Rule
 
@@ -10,7 +10,7 @@ Before implementing ANYTHING non-trivial, engage in internal Socratic debate. Ch
 2. **What could go wrong?** List 2 failure modes.
 3. **Is there a simpler approach?** If yes, use it.
 4. **Have we solved this before?** Check LEARNINGS.md.
-5. **What would the chairman critique?** Be your own harshest critic.
+5. **What would the maintainer critique?** Be your own harshest critic.
 
 ## When to Apply
 
@@ -37,4 +37,4 @@ Every VP and worker should think Socratically:
 
 ## Evidence
 
-Chairman says "Socratic thinking" in 9+ prompts. It is the single most repeated cognitive pattern requested.
+Maintainer says "Socratic thinking" in 9+ prompts. It is the single most repeated cognitive pattern requested.

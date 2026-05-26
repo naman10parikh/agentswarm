@@ -1,17 +1,17 @@
 ---
 name: llm-council-critique
-description: Run a 6-hat brutal LLM Council self-critique on any deliverable, session output, or status update. Surfaces what's actually missing, where the work is shallow, and what was tabled-for-later. Use BEFORE re-attacking a problem the chairman has flagged twice. Encodes the Karpathy LLM Council pattern from CP82 ralph loop iterations 2 and 3 — applying the council BEFORE the next attack saves three iterations.
+description: Run a 6-hat brutal LLM Council self-critique on any deliverable, session output, or status update. Surfaces what's actually missing, where the work is shallow, and what was tabled-for-later. Use BEFORE re-attacking a problem the maintainer has flagged twice. Encodes the Karpathy LLM Council pattern from CP82 ralph loop iterations 2 and 3 — applying the council BEFORE the next attack saves three iterations.
 trigger: llm council | brutal critique | self-critique | what did i miss | be honest with myself | ralph loop reflection
 ---
 
 # LLM Council Critique — Brutal Self-Reflection Skill
 
-Permanent harness asset for the 6-hat brutal self-critique pattern Karpathy popularized and chairman invoked in CP82 ralph loop iterations 2 and 3.
+Permanent harness asset for the 6-hat brutal self-critique pattern Karpathy popularized and maintainer invoked in CP82 ralph loop iterations 2 and 3.
 
 ## When to invoke
 
-- Chairman says "be very blunt with yourself, I'm not seeing it"
-- Chairman re-invokes the same prompt for a 2nd or 3rd time (proves prior iteration was insufficient)
+- Maintainer says "be very blunt with yourself, I'm not seeing it"
+- Maintainer re-invokes the same prompt for a 2nd or 3rd time (proves prior iteration was insufficient)
 - Before any "I think we're done" claim on a complex deliverable
 - After spawning sub-agents and getting output back — BEFORE applying their proposals
 - Anytime you catch yourself listing "follow-ups" or "still ungated" items at the end of a deliverable
@@ -32,15 +32,15 @@ Lens: did you USE the framework as a generative lens or just CITE it? Open-ended
 
 ### Hat 4: Auditor / Coverage
 
-Lens: count what was asked vs done. If chairman said "every bookmark" and you processed 30 of 117 (25%), that's a 75% miss. If chairman said "create tools out of every single thing I've told you" and you created ZERO, that's a hard miss. Be quantitative.
+Lens: count what was asked vs done. If maintainer said "every bookmark" and you processed 30 of 117 (25%), that's a 75% miss. If maintainer said "create tools out of every single thing I've told you" and you created ZERO, that's a hard miss. Be quantitative.
 
 ### Hat 5: Process Skeptic
 
 Lens: is iteration N shaped the SAME as iteration N-1? If yes, you're loop-aware but loop-trapped. To make progress, attack a NEW SURFACE (different sections, different files, different artifact types). Same-shape iteration with fancier prose isn't progress.
 
-### Hat 6: Chairman's voice
+### Hat 6: Maintainer's voice
 
-Lens: read the literal words of the chairman's prompt. What did they ask for that you SKIPPED? Words like "every", "all", "create tools out of every single thing", "boil the ocean", "don't stop until done" are LITERAL — not aspirational. Where did you treat a literal directive as aspirational?
+Lens: read the literal words of the maintainer's prompt. What did they ask for that you SKIPPED? Words like "every", "all", "create tools out of every single thing", "boil the ocean", "don't stop until done" are LITERAL — not aspirational. Where did you treat a literal directive as aspirational?
 
 ## Output format
 
@@ -52,7 +52,7 @@ Lens: read the literal words of the chairman's prompt. What did they ask for tha
 **Hat 3 (Karpathy):** "<one-sentence brutal observation>"
 **Hat 4 (Auditor):** "<one-sentence brutal observation with quantification>"
 **Hat 5 (Process Skeptic):** "<one-sentence brutal observation>"
-**Hat 6 (Chairman):** "<one-sentence brutal observation>"
+**Hat 6 (Maintainer):** "<one-sentence brutal observation>"
 
 ## What's actually left (the new attack surface)
 
@@ -75,10 +75,10 @@ Lens: read the literal words of the chairman's prompt. What did they ask for tha
 
 ## When NOT to invoke
 
-- Routine bug fixes with no chairman directive
+- Routine bug fixes with no maintainer directive
 - Single-file edits where the scope is unambiguous
-- Tasks the chairman explicitly closed ("ship it", "good enough", "stop here")
+- Tasks the maintainer explicitly closed ("ship it", "good enough", "stop here")
 
 ## Why this skill exists (provenance)
 
-Chairman invoked the same Ralph Loop prompt twice in CP82 (iterations 2 and 3) because each time the prior iteration's "follow-up list" at the end was a tell that the work was incomplete. Iteration 3's attack surface (Scenes/Mechanics + new skills + Appendix + vault MOC) was structurally different from iter 1+2 (which both attacked TLDR sections). The skill codifies: when chairman re-invokes, run the council BEFORE the next attack — surface what was missed, then attack a NEW surface.
+Maintainer invoked the same Ralph Loop prompt twice in CP82 (iterations 2 and 3) because each time the prior iteration's "follow-up list" at the end was a tell that the work was incomplete. Iteration 3's attack surface (Scenes/Mechanics + new skills + Appendix + vault MOC) was structurally different from iter 1+2 (which both attacked TLDR sections). The skill codifies: when maintainer re-invokes, run the council BEFORE the next attack — surface what was missed, then attack a NEW surface.

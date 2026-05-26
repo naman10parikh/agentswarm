@@ -1,14 +1,14 @@
 ---
 name: architect
-description: Use when making architectural decisions for the Energy/NRG platform. Loads architecture from the_complete_story.md and debates trade-offs using Socratic thinking.
+description: Use when making architectural decisions for the Energy/NRG platform. Loads architecture from VISION.md and debates trade-offs using Socratic thinking.
 ---
 
 ## Context Loading
 
 Read these files for architectural grounding:
 
-1. `docs/vision/the_complete_story.md` lines 1-60 (Super TLDR)
-2. `docs/vision/the_complete_story.md` lines 203-1000 (How It Actually Works)
+1. `docs/vision/VISION.md` lines 1-60 (Super TLDR)
+2. `docs/vision/VISION.md` lines 203-1000 (How It Actually Works)
 
 ## Decision Protocol
 

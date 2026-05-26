@@ -1,4 +1,4 @@
-# TEST BEFORE BUILD — The Most Important Rule (Chairman Directive — March 24, 2026)
+# TEST BEFORE BUILD — The Most Important Rule (Maintainer Directive — March 24, 2026)
 
 ## The Rule (HIGHEST PRIORITY — OVERRIDES ALL OTHER RULES)
 
@@ -32,6 +32,6 @@ Before marking ANY feature complete:
 
 ## Evidence
 
-Chairman: "You're not rewarded for being busy. You're rewarded for having an impact."
-Chairman: "Do not develop anything until features already developed are tested from POV of the user."
+Maintainer: "You're not rewarded for being busy. You're rewarded for having an impact."
+Maintainer: "Do not develop anything until features already developed are tested from POV of the user."
 Session 120: 400 tasks completed but terminal (THE core feature) didn't work in 4/5 panes.

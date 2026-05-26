@@ -12,7 +12,7 @@ Ask the user what to save, or auto-detect from the conversation:
 - Architecture decisions
 - Key file paths that changed
 - Workflow patterns discovered
-- Chairman directives that are permanent rules
+- Maintainer directives that are permanent rules
 - Tool configurations
 
 ### Step 2: Read Current Memory
@@ -42,7 +42,7 @@ Add new entries to the appropriate section of `vault/CLAUDE-MEMORY.md`. Standard
 
 [Where important things live]
 
-## Chairman Directives (Permanent)
+## Maintainer Directives (Permanent)
 
 [Rules that never expire]
 
@@ -61,7 +61,7 @@ If `vault/CLAUDE-MEMORY.md` exceeds 280 lines after update:
 
 1. Identify completed/outdated sections
 2. Move them to `vault/CLAUDE-MEMORY-ARCHIVE.md`
-3. Keep core sections (Architecture, Conventions, Chairman Directives) — never archive these
+3. Keep core sections (Architecture, Conventions, Maintainer Directives) — never archive these
 4. Log what was archived
 
 ### Step 5: Sync to Repo Memory

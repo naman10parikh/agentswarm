@@ -1,4 +1,4 @@
-# Open-Endedness — Explore, Experiment, Discover (Chairman Prompts #10, #17, #28b, #32, #37, #45, #47, #51, #53)
+# Open-Endedness — Explore, Experiment, Discover (Maintainer Prompts #10, #17, #28b, #32, #37, #45, #47, #51, #53)
 
 ## The Rule
 
