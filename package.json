@@ -1,5 +1,5 @@
 {
-  "name": "agentswarm",
+  "name": "@energy/agentswarm",
   "version": "0.2.0",
   "description": "CEO orchestration for AI agent swarms. Define VP roles, deploy tasks to panes, monitor progress.",
   "type": "module",
