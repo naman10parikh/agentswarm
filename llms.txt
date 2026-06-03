@@ -1,0 +1,15 @@
+# agentswarm
+
+> CEO orchestration for AI agent swarms. Define VP roles in a swarm.yaml, deploy each
+
+## Documentation
+
+- [README.md](README.md): CEO orchestration for AI agent swarms. Define VP roles in a swarm.yaml, deploy each
+- [AGENTS.md](AGENTS.md): > How agents (and contributors) operate inside this repo. agentswarm is the CEO layer
+- [CLAUDE.md](CLAUDE.md): > Forged from Energy via harness-forge (CP103). One repo = one recursively self-improving
+- [QUICKSTART.md](QUICKSTART.md): agentswarm is the CEO layer for AI agent swarms: define VP roles in a swarm.yaml, deploy
+
+## Notes
+
+- This file follows the llms.txt convention (https://llmstxt.org) so AI agents can
+  discover this repo's docs without scraping. Generated from the README + key docs.
