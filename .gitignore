@@ -12,12 +12,15 @@ dist/
 # Logs / coverage
 *.log
 coverage/
-logs/                      # runtime run-log audit trail (logs/runs.jsonl) — ephemeral state
+# Runtime run-log audit trail (logs/runs.jsonl) — ephemeral state
+logs/
 
 # macOS metadata
 **/.DS_Store
 
 # Ephemeral harness state (inherited harness layer — never commit)
+.claude/audit.jsonl
+.claude/audit.jsonl.lock
 .claude/worktrees/
 .claude/backups/
 .claude/scheduled_tasks.lock
