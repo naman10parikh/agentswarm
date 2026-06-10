@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "name": "agentswarm",
+  "display_name": "agentswarm — CEO orchestration for agent swarms",
+  "description": "Define VP roles in a swarm.yaml, deploy each into its own tmux pane running Claude Code, and let a CEO loop monitor progress, resolve depends_on ordering, and report status. Bundles agentswarm's own MCP server, authoring/debugging skills, and the safety hooks the repo runs.",
+  "version": "0.2.0",
+  "author": "Naman Parikh",
+  "license": "MIT",
+  "repository": "https://github.com/naman10parikh/agentswarm",
+  "mcp_servers": [
+    {
+      "name": "agentswarm",
+      "description": "The repo's own MCP server: validate a swarm.yaml, read a running swarm's live status, and BM25-search agentswarm's own knowledge corpus.",
+      "transport": "stdio",
+      "command": "node",
+      "args": ["dist/mcp-server.js"],
+      "env": {}
+    }
+  ],
+  "skills": [
+    {
+      "name": "author-swarm",
+      "path": "skills/author-swarm/SKILL.md",
+      "description": "Turn a multi-step goal into a correct, deployable agentswarm swarm.yaml (roles, model tiers, depends_on, completion signals).",
+      "triggers": ["write a swarm", "author a swarm.yaml", "run a swarm", "parallelize across agents", "CEO + VPs", "structure depends_on"]
+    },
+    {
+      "name": "run-swarm",
+      "path": "skills/run-swarm/SKILL.md",
+      "description": "Deploy a validated swarm.yaml and run the CEO monitoring loop to completion — validate → (sandbox-isolate untrusted) → dry-run → deploy → status → done.",
+      "triggers": ["deploy the swarm", "run swarm.yaml", "start the CEO loop", "spin up the VPs", "watch the swarm", "check swarm progress"]
+    },
+    {
+      "name": "debug-swarm",
+      "path": "skills/debug-swarm/SKILL.md",
+      "description": "Diagnose a swarm that is stuck, idle, deadlocked, or never finishing — walk the config → signal → dependency → idle failure tree and name the exact fix.",
+      "triggers": ["swarm stuck", "VP idle", "never finishes", "dependency deadlock", "DONE not detected", "swarm timed out"]
+    }
+  ],
+  "commands": [
+    { "name": "validate", "path": ".claude/commands/validate.md", "description": "Validate the agentswarm setup / a swarm.yaml config." },
+    { "name": "status", "path": ".claude/commands/status.md", "description": "Show the status of a running swarm or the repo." }
+  ],
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-dangerous-commands.cjs\"",
+      "description": "Block catastrophic / high-risk shell commands before they execute."
+    },
+    {
+      "event": "PreToolUse",
+      "matcher": "Read|Edit|Write|Bash",
+      "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect-secrets.cjs\"",
+      "description": "Block reads/edits/writes that would expose .env / credential files."
+    },
+    {
+      "event": "PostToolUse",
+      "matcher": "Write|Edit|Bash",
+      "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/audit-log.sh\"",
+      "description": "Append every state-changing tool call to .claude/audit.jsonl."
+    }
+  ],
+  "capabilities": {
+    "tools": [
+      {
+        "name": "validate_swarm",
+        "description": "Parse and schema-validate a swarm.yaml; returns valid:true/false plus the VP roster (role, model, depends_on).",
+        "when_to_use": "Before deploying a swarm, or whenever you want to confirm a config is well-formed without touching tmux."
+      },
+      {
+        "name": "swarm_status",
+        "description": "Read a running swarm's live state from /tmp/agentswarm-{session}-status.json.",
+        "when_to_use": "To check per-VP RUNNING/IDLE/DONE progress of a swarm that is currently deployed."
+      },
+      {
+        "name": "memory_search",
+        "description": "BM25-ranked search over agentswarm's own knowledge corpus (MEMORY.md, memory/, brain/, top-level docs).",
+        "when_to_use": "To recall a prior decision, invariant, or learning recorded in this repo's memory before acting."
+      }
+    ]
+  },
+  "install_instructions": "1. Build the package: pnpm build (produces dist/mcp-server.js).\n2. Add this plugin to Claude Code: Settings → Plugins → Add local plugin → select this directory.\n3. The agentswarm MCP tools (validate_swarm, swarm_status, memory_search), the author-swarm/debug-swarm skills, and the safety hooks are now available in any Claude Code session."
+}

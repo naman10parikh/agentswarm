@@ -12,6 +12,7 @@ dist/
 # Logs / coverage
 *.log
 coverage/
+logs/                      # runtime run-log audit trail (logs/runs.jsonl) — ephemeral state
 
 # macOS metadata
 **/.DS_Store

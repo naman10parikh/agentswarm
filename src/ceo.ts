@@ -4,6 +4,9 @@ import { Command } from "commander";
 import chalk from "chalk";
 import { writeFileSync, readFileSync } from "node:fs";
 import { loadSwarmConfig } from "./loader.js";
+import { recordRun, readRuns } from "./run-log.js";
+import { searchMemory } from "./memory-search.js";
+import { sandboxRun } from "./sandbox.js";
 import {
   hasTmux,
   sessionExists,
@@ -460,4 +463,93 @@ program
     console.log();
   });
 
-program.parse();
+program
+  .command("memory-search")
+  .description("BM25 search over this repo's own knowledge corpus")
+  .argument("<query...>", "Search terms")
+  .option("--limit <n>", "Max results", "5")
+  .action((queryParts: string[], opts: { limit: string }) => {
+    const query = queryParts.join(" ");
+    const hits = searchMemory(query, parseInt(opts.limit, 10) || 5);
+    console.log();
+    console.log(`${chalk.cyan.bold("memory-search")} ${chalk.dim(`"${query}"`)}`);
+    console.log(chalk.dim("─".repeat(55)));
+    if (hits.length === 0) {
+      console.log("  (no results)");
+    } else {
+      let rank = 0;
+      for (const h of hits) {
+        rank++;
+        console.log(
+          `  ${chalk.bold(`[${rank}]`)} ${h.path}:${h.line} ${chalk.dim(`(score ${h.score.toFixed(2)})`)}`,
+        );
+        if (h.snippet) console.log(`      ${chalk.dim(h.snippet.slice(0, 88))}`);
+      }
+    }
+    console.log();
+  });
+
+program
+  .command("log")
+  .description("Show the recent run-log audit trail (logs/runs.jsonl)")
+  .option("--limit <n>", "Max entries", "20")
+  .action((opts: { limit: string }) => {
+    const runs = readRuns(parseInt(opts.limit, 10) || 20);
+    console.log();
+    console.log(chalk.cyan.bold("agentswarm run-log"));
+    console.log(chalk.dim("─".repeat(55)));
+    if (runs.length === 0) {
+      console.log("  (no runs recorded yet)");
+    } else {
+      for (const r of runs) {
+        const mark = r.outcome === "ok" ? chalk.green("✓") : chalk.red("✗");
+        console.log(
+          `  ${r.ts}  ${mark}  ${r.command.padEnd(14)} ${String(r.durationMs).padStart(6)}ms${r.error ? "  — " + r.error : ""}`,
+        );
+      }
+    }
+    console.log();
+  });
+
+program
+  .command("sandbox-run")
+  .description("Validate a swarm.yaml inside an isolated E2B sandbox")
+  .argument("<config>", "Path to swarm.yaml")
+  .action(async (configPath: string) => {
+    log(`Booting E2B sandbox to validate ${chalk.bold(configPath)} in isolation...`);
+    const res = await sandboxRun(configPath);
+    log(`Sandbox booted: ${chalk.green(res.sandboxId)}`);
+    if (res.stdout) console.log(chalk.dim(`  ${res.stdout}`));
+    if (res.stderr) console.error(chalk.red(`  ${res.stderr}`));
+    if (res.ok) {
+      log(chalk.green(`✓ Config valid (verified inside sandbox)`));
+    } else {
+      err(`Config invalid (exit ${res.exitCode})`);
+      process.exit(1);
+    }
+  });
+
+// ─── Observability spine: time every invocation and append one audit entry ───
+const startedAt = Date.now();
+const [invokedCmd, ...invokedRest] = process.argv.slice(2);
+function logRun(outcome: "ok" | "error", error?: string): void {
+  recordRun({
+    ts: new Date().toISOString(),
+    command: invokedCmd ?? "(none)",
+    args: invokedRest,
+    durationMs: Date.now() - startedAt,
+    outcome,
+    error,
+  });
+}
+
+// commander's async actions resolve on the returned promise; record the outcome
+// once parsing + the action settle, so EVERY CLI invocation writes a run entry.
+program
+  .parseAsync()
+  .then(() => logRun("ok"))
+  .catch((e) => {
+    logRun("error", e instanceof Error ? e.message : String(e));
+    err(e instanceof Error ? e.message : String(e));
+    process.exit(1);
+  });
