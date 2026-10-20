@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "AgentSwarm: One YAML file, a swarm of expert agents, no idle panes."
+type: software
+authors:
+  - family-names: Parikh
+    given-names: Naman
+repository-code: "https://github.com/naman10parikh/agentswarm"
+license: MIT
+version: "0.2.0"
+abstract: "One YAML file, a swarm of expert agents, no idle panes."
+keywords: ["agent-native", "multi-agent", "orchestration", "tmux"]
