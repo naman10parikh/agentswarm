@@ -12,6 +12,11 @@
 - Every CLI run is logged, including runs that end in an error.
 - `agentswarm-sh` finds its helper scripts when npm installs it as a symlink.
 - `sandbox-run` runs the real loader inside the VM, so it rejects what `validate` rejects.
+- A VP's `model` now reaches its agent as `claude --model <value>`, in both CLIs. A VP with no `model` gets no flag,
+  so Claude Code uses its default. The plan then shows "default model", not a model that was never passed.
+- `agentswarm-sh run` now waits on `depends_on`: a VP starts once every role it names is done, and shows as PENDING
+  until then. Its status now reads the pane each VP runs in, so it sees each finish line.
+- `agentswarm-sh validate` rejects a `depends_on` that names no role, as `agentswarm validate` does.
 
 ### Added
 

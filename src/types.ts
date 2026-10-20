@@ -18,7 +18,8 @@ export interface VpConfig {
   role: string;
   pane: number;
   prompt: string;
-  model: "opus" | "sonnet" | "haiku";
+  /** Passed to Claude Code as `--model` exactly as written; unset means Claude Code's default model. */
+  model?: string;
   workdir: string;
   depends_on?: string[];
   outputs?: string[];

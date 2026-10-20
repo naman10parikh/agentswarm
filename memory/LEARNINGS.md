@@ -80,3 +80,12 @@ Every error → root cause → rule. Auto-compressed when >500 lines (memory-com
 - **Root cause:** the VM ran a hand-written line counter, not the loader, so the two validators disagreed.
 - **Rule:** the sandbox runs the real loader (`dist/loader.js` and the `yaml` package, shipped from the install, in
   `src/sandbox.ts`). Check a sandbox path with a config that must fail, not only with one that passes.
+
+## 2026-10-20 — The plan printed a model and an order that never reached the agents
+
+- **What broke:** `validate` and `run --dry` printed each VP's model and dependencies, but neither runner passed the
+  model to `claude`, and the bash runner started every VP at once. Its status also read the YAML `pane` number, one
+  off from the pane the prompt went to, so it never saw a finish line.
+- **Root cause:** fields were parsed and displayed without a test that checks what the agent actually receives.
+- **Rule:** a field the plan prints must reach the agent, or the plan says it does not. The golden eval records each
+  stand-in agent's arguments and checks `--model` and the start order in both runners.

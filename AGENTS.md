@@ -28,8 +28,8 @@ when a goal splits into parts with a clear order: research before writing, writi
 | `agentswarm --help` · `agentswarm --version` | help and version |
 
 `agentswarm-sh` is the same CLI in bash with no build step (it needs python3 and PyYAML). It adds
-`agentswarm-sh init`, which writes a starter `swarm.yaml`. It starts every role at once and does not wait on
-`depends_on`, so use `agentswarm` for a swarm with an order.
+`agentswarm-sh init`, which writes a starter `swarm.yaml`. Like `agentswarm`, it waits on `depends_on` and passes
+each role's `model` to its agent.
 
 **MCP server** (`agentswarm-mcp`, stdio, 3 tools): `validate_swarm` checks a config, `swarm_status` reads a running
 swarm's status, `memory_search` searches this repository's memory. Start it with
@@ -120,12 +120,13 @@ and an annotated example live in `README.md` and `examples/`.
    infer completion from anything else.
 3. **`depends_on` gates deployment**, not just reporting: a VP must not be spawned before its dependencies report
    done.
-4. **Models map to task tier:** `opus` strategic · `sonnet` implementation · `haiku` simple. The field is recorded
-   in the plan and the status file; the launch itself passes no model flag.
+4. **Models map to task tier:** `opus` strategic · `sonnet` implementation · `haiku` simple. Both runners pass a
+   VP's `model` to `claude` as `--model <value>`, exactly as the file writes it. A VP with no `model` gets no flag and
+   runs on Claude Code's default. Never fill in a model the file does not set.
 5. **The two implementations stay behavior-equivalent.** A change to deploy/poll/status logic in
    `src/ceo.ts` must be mirrored in the bash path (`orchestrate.sh`/`status.sh`) and vice versa.
-   `examples/*.yaml` must validate under both. Known gap: the bash path starts every role at once (it reads
-   `depends_on` but does not wait on it) and sends only the first five lines of each prompt.
+   `examples/*.yaml` must validate under both. Known gap: the bash path sends only the first five lines of each
+   prompt.
 6. **Status JSON shape is a public API** (`/tmp/agentswarm-{session}-status.json`). Don't break
    the `{ timestamp, session, vps: [{ role, pane, status }] }` contract without a CHANGELOG note.
 7. **A prompt is text, never shell.** Both implementations pass it to `claude` as one single-quoted argument.

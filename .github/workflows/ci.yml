@@ -22,8 +22,8 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Install tmux
-        run: sudo apt-get update && sudo apt-get install -y tmux
+      - name: Install tmux and PyYAML (the bash runner needs it)
+        run: sudo apt-get update && sudo apt-get install -y tmux python3-yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile

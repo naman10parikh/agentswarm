@@ -1,0 +1,22 @@
+# Golden fixture: Upstream never finishes, so Downstream, which depends on it, must never start.
+swarm:
+  name: golden-blocked
+  session: agentswarm-golden-blocked
+  poll_interval: 1
+  max_runtime: 2
+  idle_timeout: 300
+
+ceo:
+  prompt: |
+    You are the CEO.
+
+vps:
+  - role: Upstream
+    pane: 1
+    prompt: |
+      NEVER-FINISH. Say "Upstream: DONE" when finished.
+  - role: Downstream
+    pane: 2
+    prompt: |
+      Say "Downstream: DONE" when finished.
+    depends_on: [Upstream]

@@ -7,6 +7,14 @@ describe("vpLaunchCommand", () => {
     expect(vpLaunchCommand("Do research.\nSay it.")).toBe("claude --dangerously-skip-permissions 'Do research. Say it.'");
   });
 
+  it("passes the swarm file's model through claude's own --model flag, and no flag when the file sets none", () => {
+    expect(vpLaunchCommand("Do it.", "model-from-swarm-file")).toBe(
+      "claude --dangerously-skip-permissions --model 'model-from-swarm-file' 'Do it.'",
+    );
+    expect(vpLaunchCommand("Do it.", "$(id)")).toContain("--model '$(id)' ");
+    expect(vpLaunchCommand("Do it.")).not.toContain("--model");
+  });
+
   it("never lets the pane's shell expand the prompt", () => {
     // The shell receives exactly the text, with $(...), backticks and quotes intact.
     const prompt = `Summarise $(whoami) and \`id\`, then say "VP: DONE" and it's done`;

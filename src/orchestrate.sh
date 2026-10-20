@@ -64,7 +64,7 @@ import json, sys
 vps = json.load(sys.stdin)
 for vp in vps:
     deps = ', '.join(vp['depends_on']) if vp['depends_on'] else 'none'
-    print(f\"  Pane {vp['pane']}: {vp['role']} (model: {vp['model']}, depends: {deps})\")
+    print(f\"  Pane {vp['pane']}: {vp['role']} (model: {vp['model'] or 'default'}, depends: {deps})\")
     print(f\"    Prompt: {vp['prompt'][:80]}...\")
     print()
 "
@@ -113,40 +113,49 @@ for vp in vps:
     # Tile the layout evenly
     tmux select-layout -t "${session}:0" tiled 2>/dev/null || true
 
-    vp_specs+=("${role}:${pane}")
-    log "  Pane ${pane}: ${role} (${model})"
+    # Status reads pane i, the pane VP i's launch command is sent to below.
+    vp_specs+=("${role}:${i}")
+    log "  Pane ${pane}: ${role} (${model:-default model})"
   done
 
-  # Deploy prompts to each VP pane
+  # Deploy prompts. A VP with no depends_on starts now; the monitoring loop starts each other VP once every role
+  # in its depends_on has printed its DONE line.
   echo ""
   log "Deploying VP prompts..."
 
+  local launch_cmds=() deps_list=() started=()
   for (( i=0; i<vp_count; i++ )); do
-    local role prompt pane_idx
+    local role prompt model deps
     role=$(echo "$vps_json" | python3 -c "import json,sys; print(json.load(sys.stdin)[$i]['role'])")
     prompt=$(echo "$vps_json" | python3 -c "import json,sys; print(json.load(sys.stdin)[$i]['prompt'])")
-    # Pane index in tmux is 0-based for the splits we created
-    pane_idx=$((i + 1))
-    # For the first VP, use pane 0 if only CEO was there, otherwise use split index
-    if [ "$i" -eq 0 ]; then
-      pane_idx=0
-    fi
+    model=$(echo "$vps_json" | python3 -c "import json,sys; print(json.load(sys.stdin)[$i]['model'])")
+    deps=$(echo "$vps_json" | python3 -c "import json,sys; print('\\n'.join(json.load(sys.stdin)[$i]['depends_on']))")
 
-    # Send the claude command with the prompt to the pane
-    # Escape the prompt for tmux send-keys
     # The prompt goes to the pane's shell as one single-quoted argument, so $(...) and backticks in a
-    # swarm.yaml written by someone else are never run.
-    local one_line quoted_prompt
+    # swarm.yaml written by someone else are never run. A model from the file goes through claude's own
+    # --model flag, quoted the same way; with none, claude uses its default model.
+    local one_line quoted_prompt model_flag=""
     one_line=$(echo "$prompt" | head -5 | tr '\n' ' ' | cut -c1-500)
     quoted_prompt="'$(printf '%s' "$one_line" | sed "s/'/'\\\\''/g")'"
+    if [ -n "$model" ]; then
+      model_flag="--model '$(printf '%s' "$model" | sed "s/'/'\\\\''/g")' "
+    fi
+    launch_cmds+=("claude --dangerously-skip-permissions ${model_flag}${quoted_prompt}")
+    deps_list+=("$deps")
 
-    tmux send-keys -t "${session}:0.${i}" "claude --dangerously-skip-permissions ${quoted_prompt}" Enter
-    log "  Deployed to pane ${i}: ${role}"
-    sleep 1  # Brief pause between deployments
+    if [ -z "$deps" ]; then
+      tmux send-keys -t "${session}:0.${i}" "${launch_cmds[$i]}" Enter
+      started+=(1)
+      log "  Deployed to pane ${i}: ${role}"
+      sleep 1  # Brief pause between deployments
+    else
+      started+=(0)
+      log "  Waiting: ${role} (needs ${deps//$'\n'/, })"
+    fi
   done
 
   echo ""
-  log "${GREEN}All VPs deployed.${NC}"
+  log "${GREEN}All VPs deployed or waiting.${NC}"
   log "Entering monitoring loop (poll every ${poll_interval}s, max ${max_runtime}m)..."
   echo ""
 
@@ -164,6 +173,19 @@ for vp in vps:
       log "${YELLOW}Max runtime reached (${max_runtime}m). Shutting down.${NC}"
       break
     fi
+
+    # Start each waiting VP once every role in its depends_on is done. Roles still waiting show as PENDING.
+    AGENTSWARM_WAITING=""
+    for (( i=0; i<vp_count; i++ )); do
+      [ "${started[$i]}" = "1" ] && continue
+      if deps_done "$session" "${deps_list[$i]}" "${vp_specs[@]}"; then
+        tmux send-keys -t "${session}:0.${i}" "${launch_cmds[$i]}" Enter
+        started[$i]=1
+        log "  Deployed to pane ${i}: ${vp_specs[$i]%%:*} (its depends_on are done)"
+      else
+        AGENTSWARM_WAITING+="${vp_specs[$i]%%:*}"$'\n'
+      fi
+    done
 
     # Print status dashboard
     if print_status "$session" "$idle_timeout" "${vp_specs[@]}"; then

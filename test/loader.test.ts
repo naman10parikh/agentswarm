@@ -76,7 +76,8 @@ vps:
     expect(cfg.swarm.max_runtime).toBe(180);
     expect(cfg.swarm.idle_timeout).toBe(300);
     expect(cfg.ceo.model).toBe("opus");
-    expect(cfg.vps[0].model).toBe("sonnet");
+    // No model in the file: none is passed to the agent, so Claude Code uses its own default.
+    expect(cfg.vps[0].model).toBeUndefined();
     expect(cfg.vps[0].pane).toBe(1);
     expect(cfg.vps[0].workdir).toBe(".");
     expect(cfg.vps[0].depends_on).toEqual([]);

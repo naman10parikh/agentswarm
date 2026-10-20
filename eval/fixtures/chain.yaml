@@ -1,5 +1,6 @@
 # Golden fixture: a three-step chain (Alpha -> Beta -> Gamma). Alpha's prompt also carries shell syntax that
-# must reach the agent as plain text and never run.
+# must reach the agent as plain text and never run. Alpha's model must reach the agent as --model; Beta and Gamma set
+# none, so their agents get no --model flag.
 swarm:
   name: golden-chain
   session: agentswarm-golden-chain
@@ -17,6 +18,7 @@ vps:
     prompt: |
       Step one. Leave this text alone: $(touch pwned-by-swarm) and `touch pwned-by-backticks`.
       Say "Alpha: DONE" when finished.
+    model: model-from-swarm-file
     depends_on: []
   - role: Beta
     pane: 2

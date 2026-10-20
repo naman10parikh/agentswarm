@@ -152,7 +152,7 @@ single-quoted argument, so shell syntax in it is text and never runs.
 | Path | Bin | Needs | When |
 | --- | --- | --- | --- |
 | **TypeScript** | `agentswarm` | Node 18 or newer, tmux | Default. Waits on `depends_on`, logs every run, has the MCP server. |
-| **Bash** | `agentswarm-sh` | bash, tmux, python3 with PyYAML | No build step. Starts every role at once and does not wait on `depends_on`. |
+| **Bash** | `agentswarm-sh` | bash, tmux, python3 with PyYAML | No build step. Also waits on `depends_on`. Sends only the first five lines of each prompt. |
 
 Both read the same `swarm.yaml`. To put only the bash CLI on your PATH, run `bash install.sh` in a clone: it checks
 for bash, tmux and python3, installs PyYAML if it is missing, and writes `~/.local/bin/agentswarm`, a wrapper for
@@ -171,16 +171,16 @@ swarm:
 ceo:
   prompt: |
     You are the CEO. Monitor VPs and coordinate.
-  model: opus # opus | sonnet | haiku
+  model: opus # Not used: the CEO is the agentswarm process itself, not an agent
   context:
-    - CLAUDE.md # Files injected into CEO context
+    - CLAUDE.md # Not used either
 
 vps:
   - role: VP Research # Unique role name
     pane: 1 # Pane number
     prompt: |
       Do research. Say "VP Research: DONE" when finished.
-    model: sonnet
+    model: sonnet # Passed to claude as --model; leave it out for Claude Code's default
     workdir: .
     depends_on: [] # Roles that must finish before this VP starts
     outputs: # Files this VP produces (advisory)
@@ -192,8 +192,9 @@ Rules:
 1. **Role names must be unique** across the swarm.
 2. **Completion signal:** each VP must print `{Role}: DONE` on its own line when finished.
 3. **Dependencies:** `depends_on` lists role names that must complete first.
-4. **Models:** `opus` for strategic, `sonnet` for implementation, `haiku` for simple tasks. The model is recorded in
-   the plan and the status file.
+4. **Models:** each VP's `model` reaches its agent as `claude --model <value>`, exactly as the file writes it. A VP
+   with no `model` gets no flag, so Claude Code uses its default model. A common split: `opus` for strategic work,
+   `sonnet` for implementation, `haiku` for simple tasks.
 
 ### Commands
 

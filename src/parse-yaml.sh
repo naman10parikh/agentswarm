@@ -54,7 +54,7 @@ for i, vp in enumerate(vps):
         'role': vp.get('role', f'VP {i}'),
         'pane': vp.get('pane', i + 1),
         'prompt': vp.get('prompt', '').strip(),
-        'model': vp.get('model', 'sonnet'),
+        'model': vp.get('model') or '',
         'workdir': vp.get('workdir', '.'),
         'depends_on': vp.get('depends_on', []),
         'outputs': vp.get('outputs', []),
@@ -103,8 +103,8 @@ try:
             else: roles.add(vp['role'])
             if 'prompt' not in vp: errors.append(f'vps[{i}].prompt is required')
             for dep in vp.get('depends_on', []):
-                if dep not in roles and dep not in [v.get('role') for v in d['vps']]:
-                    pass  # allow forward references
+                if dep not in [v.get('role') for v in d['vps']]:  # a forward reference is fine, a missing role is not
+                    errors.append(f'{vp.get(\"role\")} depends_on \"{dep}\" which is not a defined role')
     if errors:
         for e in errors: print(f'ERROR: {e}')
         sys.exit(1)

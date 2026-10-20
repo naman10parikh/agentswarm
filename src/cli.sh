@@ -110,7 +110,7 @@ import json, sys
 vps = json.load(sys.stdin)
 for vp in vps:
     deps = ', '.join(vp['depends_on']) if vp['depends_on'] else 'none'
-    print(f\"  [{vp['pane']}] {vp['role']}  (model: {vp['model']}, depends: {deps})\")
+    print(f\"  [{vp['pane']}] {vp['role']}  (model: {vp['model'] or 'default'}, depends: {deps})\")
 "
     echo ""
   else
@@ -147,7 +147,7 @@ with open('$status_file') as f: data = json.load(f)
 print(f\"  Timestamp: {data['timestamp']}\")
 print()
 for vp in data['vps']:
-    icon = '✓' if vp['status'] == 'done' else '⏸' if vp['status'] == 'idle' else '▶'
+    icon = '✓' if vp['status'] == 'done' else '⏸' if vp['status'] == 'idle' else '○' if vp['status'] == 'pending' else '▶'
     color = '32' if vp['status'] == 'done' else '33' if vp['status'] == 'idle' else '36'
     print(f\"  \033[0;{color}m{icon}\033[0m  {vp['role']:<20s} {vp['status'].upper():<8s} pane {vp['pane']}\")
 done_count = sum(1 for v in data['vps'] if v['status'] == 'done')

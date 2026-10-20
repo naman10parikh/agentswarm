@@ -6,6 +6,14 @@
 RED=$'\033[0;31m'; GREEN=$'\033[0;32m'; YELLOW=$'\033[0;33m'
 CYAN=$'\033[0;36m'; DIM=$'\033[2m'; BOLD=$'\033[1m'; NC=$'\033[0m'
 
+# Roles not started yet because a role in their depends_on is not done, one per line. orchestrate.sh sets it.
+AGENTSWARM_WAITING="${AGENTSWARM_WAITING:-}"
+
+is_waiting() {
+  case $'\n'"$AGENTSWARM_WAITING"$'\n' in *$'\n'"$1"$'\n'*) return 0 ;; esac
+  return 1
+}
+
 # Check if a pane has output the DONE signal
 # Returns 0 if done, 1 if still running
 check_pane_done() {
@@ -85,7 +93,12 @@ print_status() {
 
     local status_icon status_color status_text
 
-    if check_pane_done "$session" "$pane" "$role"; then
+    if is_waiting "$role"; then
+      status_icon="○"
+      status_color="$DIM"
+      status_text="PENDING"
+      all_done=false
+    elif check_pane_done "$session" "$pane" "$role"; then
       status_icon="✓"
       status_color="$GREEN"
       status_text="DONE"
@@ -137,6 +150,25 @@ wait_for_vp() {
   done
 }
 
+# True when every role in $2 (one per line) has printed its DONE line in its own pane. The remaining args are the
+# swarm's "role:pane" pairs. A role that is not in the swarm is never done.
+deps_done() {
+  local session="$1" deps="$2" dep spec found
+  shift 2
+  while IFS= read -r dep; do
+    if [ -z "$dep" ]; then continue; fi
+    found=false
+    for spec in "$@"; do
+      if [ "${spec%%:*}" = "$dep" ]; then
+        found=true
+        check_pane_done "$session" "${spec##*:}" "$dep" || return 1
+      fi
+    done
+    $found || return 1
+  done <<< "$deps"
+  return 0
+}
+
 # Write status to a JSON file (for programmatic consumption)
 write_status_json() {
   local session="$1" outfile="$2" idle_timeout="$3"
@@ -151,7 +183,9 @@ write_status_json() {
     local pane="${spec##*:}"
     local status="running"
 
-    if check_pane_done "$session" "$pane" "$role"; then
+    if is_waiting "$role"; then
+      status="pending"
+    elif check_pane_done "$session" "$pane" "$role"; then
       status="done"
     elif check_pane_idle "$session" "$pane" "$idle_timeout"; then
       status="idle"

@@ -48,7 +48,7 @@ export function loadSwarmConfig(filePath: string): SwarmConfig {
       role,
       pane: (vp.pane as number) ?? i + 1,
       prompt: ((vp.prompt as string) ?? "").trim(),
-      model: (vp.model as "opus" | "sonnet" | "haiku") ?? "sonnet",
+      model: vp.model ? String(vp.model) : undefined,
       workdir: (vp.workdir as string) ?? ".",
       depends_on: (vp.depends_on as string[]) ?? [],
       outputs: (vp.outputs as string[]) ?? [],

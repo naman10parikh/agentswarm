@@ -12,10 +12,13 @@ export function shellQuote(text: string): string {
 /**
  * The command typed into a VP's pane. The prompt travels as one shell-quoted argument: a prompt from a
  * swarm.yaml written by someone else can hold `$(...)` or backticks, and the pane's shell must not run them.
+ * The role's `model`, when the swarm file sets one, goes through Claude Code's own `--model` flag, quoted the same
+ * way. With no model, no flag is passed and Claude Code uses its default model.
  */
-export function vpLaunchCommand(prompt: string): string {
+export function vpLaunchCommand(prompt: string, model?: string): string {
   const oneLine = prompt.replace(/\s*\n\s*/g, " ").trim();
-  return `claude --dangerously-skip-permissions ${shellQuote(oneLine)}`;
+  const modelFlag = model ? `--model ${shellQuote(model)} ` : "";
+  return `claude --dangerously-skip-permissions ${modelFlag}${shellQuote(oneLine)}`;
 }
 
 /**

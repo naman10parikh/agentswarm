@@ -46,7 +46,7 @@ async function deploy(configPath: string, dryRun: boolean): Promise<void> {
       vp.depends_on && vp.depends_on.length > 0
         ? chalk.dim(` → waits for ${vp.depends_on.join(", ")}`)
         : "";
-    log(`  [${vp.pane}] ${chalk.bold(vp.role)} (${vp.model})${deps}`);
+    log(`  [${vp.pane}] ${chalk.bold(vp.role)} (${vp.model ?? "default model"})${deps}`);
   }
   console.log();
 
@@ -115,7 +115,7 @@ async function deploy(configPath: string, dryRun: boolean): Promise<void> {
 
     if (!hasDeps) {
       // Deploy immediately
-      sendKeys(swarm.session, paneIndex, vpLaunchCommand(vp.prompt));
+      sendKeys(swarm.session, paneIndex, vpLaunchCommand(vp.prompt, vp.model));
       state.vps[i].status = "running";
       state.vps[i].deployedAt = new Date().toISOString();
       log(`  ${chalk.green("▶")} Deployed: ${vp.role} → pane ${paneIndex}`);
@@ -184,7 +184,7 @@ async function monitorLoop(state: SwarmState): Promise<void> {
         );
 
         if (depsReady) {
-          sendKeys(sessionName, vp.paneIndex, vpLaunchCommand(vp.config.prompt));
+          sendKeys(sessionName, vp.paneIndex, vpLaunchCommand(vp.config.prompt, vp.config.model));
           vp.status = "running";
           vp.deployedAt = new Date().toISOString();
           deployedPending = true;
@@ -364,7 +364,7 @@ program
           vp.depends_on && vp.depends_on.length > 0
             ? chalk.dim(` → ${vp.depends_on.join(", ")}`)
             : "";
-        console.log(`  [${vp.pane}] ${vp.role} (${vp.model})${deps}`);
+        console.log(`  [${vp.pane}] ${vp.role} (${vp.model ?? "default model"})${deps}`);
       }
       console.log();
     } catch (e) {

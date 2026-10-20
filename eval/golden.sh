@@ -101,6 +101,11 @@ while [ "$ROUND" -le "$K" ]; do
     ok "status-reports-then-stop-ends-session"
   else bad "status-reports-then-stop-ends-session" "$(printf '%s' "$STATUS_OUT" | tail -4 | tr '\n' ' ')"; fi
 
+  # G3c: a role's model reaches its agent through --model, and a role with no model gets no flag.
+  if grep -q -- '--model model-from-swarm-file Step one' "$AS_EVAL_ARGV" && [ "$(grep -c -- '--model' "$AS_EVAL_ARGV")" = "1" ]; then
+    ok "model-reaches-agent-only-when-set"
+  else bad "model-reaches-agent-only-when-set" "argv: $(tr '\n' ' ' < "$AS_EVAL_ARGV" | head -c 240)"; fi
+
   # G4: shell syntax in a prompt reaches the agent as text and never runs.
   if [ ! -e "$TMP/work/pwned-by-swarm" ] && [ ! -e "$TMP/work/pwned-by-backticks" ] && grep -qF '$(touch pwned-by-swarm)' "$AS_EVAL_ARGV"; then
     ok "prompt-text-never-runs-as-shell"
@@ -146,6 +151,42 @@ PY
   # G7: every CLI run left a line in the append-only run log.
   if [ "$(runlog_lines)" -ge $((LOG_BEFORE + 6)) ]; then ok "run-log-records-every-run"
   else bad "run-log-records-every-run" "lines $LOG_BEFORE -> $(runlog_lines)"; fi
+
+  # G8: a VP whose dependency never finishes is never started, by either runner.
+  for RUNNER in ts sh; do
+    if [ "$RUNNER" = sh ] && ! python3 -c "import yaml" 2>/dev/null; then
+      echo "  SKIP  r$ROUND dependent-never-starts-early-$RUNNER: the bash runner needs python3 with PyYAML"; continue
+    fi
+    : > "$AS_EVAL_ARGV"
+    if [ "$RUNNER" = ts ]; then (cd "$TMP/work" && exec $CLI run "$ROOT/eval/fixtures/blocked.yaml" > "$TMP/blocked.out" 2>&1) &
+    else (cd "$TMP/work" && exec bash "$ROOT/src/cli.sh" run "$ROOT/eval/fixtures/blocked.yaml" > "$TMP/blocked.out" 2>&1) &
+    fi
+    BLOCKED_PID=$!
+    i=0; until [ "$(status_field agentswarm-golden-blocked "[v['status'] for v in d['vps']][1]")" = "pending" ] || [ "$i" -ge 150 ]; do sleep 0.2; i=$((i+1)); done
+    sleep 2  # two more polls
+    BLOCKED="$(status_field agentswarm-golden-blocked "[v['status'] for v in d['vps']][1]")"
+    kill "$BLOCKED_PID" 2>/dev/null; wait "$BLOCKED_PID" 2>/dev/null
+    tmux kill-session -t agentswarm-golden-blocked >/dev/null 2>&1; rm -f /tmp/agentswarm-agentswarm-golden-blocked-status.json
+    if [ "$BLOCKED" = "pending" ] && grep -q "Upstream: DONE" "$AS_EVAL_ARGV" && ! grep -q "Downstream" "$AS_EVAL_ARGV"; then
+      ok "dependent-never-starts-early-$RUNNER"
+    else bad "dependent-never-starts-early-$RUNNER" "downstream=$BLOCKED argv: $(tr '\n' ' ' < "$AS_EVAL_ARGV" | head -c 200)"; fi
+  done
+
+  # G9: the bash runner runs the chain to done: it holds Beta and Gamma, then starts each once its dependency is done.
+  if python3 -c "import yaml" 2>/dev/null; then
+    : > "$AS_EVAL_ARGV"; rm -f "$TMP/chain-sh.rc" /tmp/agentswarm-agentswarm-golden-chain-status.json
+    (cd "$TMP/work" && bash "$ROOT/src/cli.sh" run "$ROOT/eval/fixtures/chain.yaml" > "$TMP/chain-sh.out" 2>&1; echo $? > "$TMP/chain-sh.rc") &
+    i=0; while [ ! -s "$TMP/chain-sh.rc" ] && [ "$i" -lt 300 ]; do sleep 0.2; i=$((i+1)); done
+    SH_DONE="$(status_field agentswarm-golden-chain "[v['status'] for v in d['vps']] == ['done', 'done', 'done']")"
+    tmux kill-session -t agentswarm-golden-chain >/dev/null 2>&1
+    if [ "$(cat "$TMP/chain-sh.rc" 2>/dev/null)" = "0" ] && [ "$SH_DONE" = "True" ] &&
+       grep -q "Waiting: Beta (needs Alpha)" "$TMP/chain-sh.out" && grep -q "Waiting: Gamma (needs Beta)" "$TMP/chain-sh.out" &&
+       [ "$(grep -c -- '--model model-from-swarm-file Step one' "$AS_EVAL_ARGV")" = "1" ] && [ "$(grep -c -- '--model' "$AS_EVAL_ARGV")" = "1" ]; then
+      ok "bash-runner-chain-in-dependency-order"
+    else bad "bash-runner-chain-in-dependency-order" "rc=$(cat "$TMP/chain-sh.rc" 2>/dev/null) done=$SH_DONE $(tail -2 "$TMP/chain-sh.out" | tr '\n' ' ')"; fi
+  else
+    echo "  SKIP  r$ROUND bash-runner-chain-in-dependency-order: the bash runner needs python3 with PyYAML"
+  fi
 
   tmux kill-server >/dev/null 2>&1
   ROUND=$((ROUND+1))
