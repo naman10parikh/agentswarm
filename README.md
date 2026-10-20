@@ -5,7 +5,7 @@
 
 <p align="center">
 <a href="https://github.com/naman10parikh/agentswarm/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/naman10parikh/agentswarm/actions/workflows/ci.yml/badge.svg"></a>
-<a href="https://github.com/naman10parikh/agentswarm/releases"><img alt="Version" src="https://img.shields.io/badge/version-0.2.0-2f5d8a?style=flat-square"></a>
+<a href="https://github.com/naman10parikh/agentswarm/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/naman10parikh/agentswarm?style=flat-square&amp;color=2f5d8a"></a>
 <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-2f5d8a?style=flat-square"></a>
 <a href="#use-it-from-any-coding-agent"><img alt="MCP server" src="https://img.shields.io/badge/MCP-server-1e3f60?style=flat-square"></a>
 <a href="https://x.com/naman10parikh"><img alt="Follow @naman10parikh on X" src="https://img.shields.io/badge/follow-%40naman10parikh-000000?style=flat-square&amp;logo=x&amp;logoColor=white"></a>
@@ -20,7 +20,7 @@ AgentSwarm is an agent employee, a packaged specialist agent with its own skills
 
 _AgentSwarm is part of an agent-native play for agent-native systems that can eventually be recursively self-improving and evolving, operated by agent employees._
 
-<p align="center"><img alt="AgentSwarm on the command line" src="assets/terminal.svg" width="880"></p>
+<p align="center"><img alt="AgentSwarm: a real task, run offline" src="assets/demo.svg" width="880"></p>
 <!-- fleet:header:end -->
 
 agentswarm turns one `swarm.yaml` into a team of coding agents. It opens one tmux pane per role, starts a Claude Code
@@ -264,7 +264,7 @@ Every project in this fleet is graded on the same 11 harness components and on s
 | Sub-agents | ✅ | .claude/agents/swarm-designer.md:1, .claude/agents/swarm-doctor.md:1 (bundled in .claude-plugin/plugin.json) |
 | MCPs | ✅ | src/mcp-server.ts:45 (own stdio server, 3 tools; bin agentswarm-mcp) + .mcp.json:3 |
 | Dispatch | ✅ | src/ceo.ts:33 (deploy) and src/ceo.ts:181 (depends_on gate); scheduled run .github/workflows/improve.yml:9 |
-| Evals | ✅ | eval/run.sh:1 (surfaces 43, golden 10 tasks pass^3) gating CI .github/workflows/ci.yml:38 |
+| Evals | ✅ | eval/run.sh:1 (surfaces 43, golden 14 tasks pass^3) gating CI .github/workflows/ci.yml:38 |
 | Observability | ✅ | src/run-log.ts:22 (append-only logs/runs.jsonl, failures included) + status JSON src/ceo.ts:293 + .claude/hooks/audit-log.sh |
 | Sandbox/Infra | ✅ | src/sandbox.ts:78 (E2B microVM runs the real loader; e2b dependency package.json) |
 | Self-improvement | ✅ | dsip.json:1 (L2) + .github/workflows/improve.yml (nightly loop) + scripts/improve.mjs |
