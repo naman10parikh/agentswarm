@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { isDoneSignal, shellQuote, vpLaunchCommand } from "../src/vp.js";
+import { isDoneSignal, shellQuote, trackIdle, vpLaunchCommand, waitingCommand } from "../src/vp.js";
+import type { VpState } from "../src/types.js";
 
 describe("vpLaunchCommand", () => {
   it("passes the prompt as one argument, joined into one line", () => {
@@ -44,5 +45,34 @@ describe("isDoneSignal", () => {
   it("treats regex characters in a role as plain text", () => {
     expect(isDoneSignal("QA (v2): DONE", "QA (v2)")).toBe(true);
     expect(isDoneSignal("QA v2: DONE", "QA (v2)")).toBe(false);
+  });
+});
+
+describe("waitingCommand", () => {
+  it("shows a waiting role and its dependencies as text, never as shell syntax", () => {
+    const line = execFileSync("sh", ["-c", waitingCommand("$(id)", ["`id`", "Alpha"])], { encoding: "utf8" });
+    expect(line).toBe("⏳ $(id) waiting for: `id`, Alpha\n");
+  });
+});
+
+describe("trackIdle", () => {
+  const vp = (): VpState => ({
+    config: { role: "Writer", pane: 1, prompt: "Write.", workdir: "." },
+    paneIndex: 1, status: "running", deployedAt: null, doneAt: null, lastActivity: 0, outputLines: [],
+  });
+
+  it("marks a pane idle only after its last lines stay the same for longer than the timeout", () => {
+    const v = vp();
+    expect(trackIdle(v, ["working 1"], 60, 1_000)).toBe(false);
+    expect(trackIdle(v, ["working 1"], 60, 50_000)).toBe(false);
+    expect(trackIdle(v, ["working 1"], 60, 62_000)).toBe(true);
+  });
+
+  it("counts any new output as activity", () => {
+    const v = vp();
+    trackIdle(v, ["working 1"], 60, 1_000);
+    expect(trackIdle(v, ["working 1", "working 2"], 60, 90_000)).toBe(false);
+    expect(v.lastActivity).toBe(90_000);
+    expect(v.outputLines).toEqual(["working 1", "working 2"]);
   });
 });

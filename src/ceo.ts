@@ -6,7 +6,7 @@ import { writeFileSync, readFileSync } from "node:fs";
 import { loadSwarmConfig } from "./loader.js";
 import { recordRun, readRuns } from "./run-log.js";
 import { searchMemory } from "./memory-search.js";
-import { isDoneSignal, vpLaunchCommand } from "./vp.js";
+import { isDoneSignal, trackIdle, vpLaunchCommand, waitingCommand } from "./vp.js";
 import {
   hasTmux,
   sessionExists,
@@ -18,7 +18,6 @@ import {
   renamePane,
   enablePaneTitles,
   capturePaneOutput,
-  getPaneActivity,
   listSwarmSessions,
 } from "./tmux.js";
 import type { SwarmState, VpState, VpStatus } from "./types.js";
@@ -121,11 +120,7 @@ async function deploy(configPath: string, dryRun: boolean): Promise<void> {
       log(`  ${chalk.green("▶")} Deployed: ${vp.role} → pane ${paneIndex}`);
     } else {
       // Show waiting message in pane
-      sendKeys(
-        swarm.session,
-        paneIndex,
-        `echo "⏳ ${vp.role} waiting for: ${vp.depends_on!.join(", ")}"`,
-      );
+      sendKeys(swarm.session, paneIndex, waitingCommand(vp.role, vp.depends_on!));
       log(
         `  ${chalk.yellow("⏸")} Pending: ${vp.role} (needs ${vp.depends_on!.join(", ")})`,
       );
@@ -195,7 +190,7 @@ async function monitorLoop(state: SwarmState): Promise<void> {
 
       // Check running VPs for done signal
       const output = await capturePaneOutput(sessionName, vp.paneIndex, 30);
-      vp.outputLines = output.split("\n").slice(-10);
+      const idle = trackIdle(vp, output.split("\n").slice(-10), idleTimeout);
 
       if (isDoneSignal(output, vp.config.role)) {
         vp.status = "done";
@@ -205,21 +200,15 @@ async function monitorLoop(state: SwarmState): Promise<void> {
         continue;
       }
 
-      // Check for idle
-      const activity = getPaneActivity(sessionName, vp.paneIndex);
-      if (activity > 0) {
-        const idleSecs = Math.floor(Date.now() / 1000) - activity;
-        if (idleSecs > idleTimeout) {
-          if (vp.status !== "idle") {
-            vp.status = "idle";
-            log(
-              `  ${chalk.yellow("⏸")} Idle: ${vp.config.role} (${idleSecs}s no output)`,
-            );
-          }
-        } else {
-          vp.status = "running";
+      // Check for idle: no change in the pane for more than idle_timeout seconds
+      if (idle) {
+        if (vp.status !== "idle") {
+          vp.status = "idle";
+          const idleSecs = Math.floor((Date.now() - vp.lastActivity) / 1000);
+          log(`  ${chalk.yellow("⏸")} Idle: ${vp.config.role} (${idleSecs}s no output)`);
         }
-        vp.lastActivity = activity * 1000;
+      } else {
+        vp.status = "running";
       }
     }
 

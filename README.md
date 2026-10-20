@@ -264,7 +264,7 @@ Every project in this fleet is graded on the same 11 harness components and on s
 | Sub-agents | ✅ | .claude/agents/swarm-designer.md:1, .claude/agents/swarm-doctor.md:1 (bundled in .claude-plugin/plugin.json) |
 | MCPs | ✅ | src/mcp-server.ts:45 (own stdio server, 3 tools; bin agentswarm-mcp) + .mcp.json:3 |
 | Dispatch | ✅ | src/ceo.ts:33 (deploy) and src/ceo.ts:181 (depends_on gate); scheduled run .github/workflows/improve.yml:9 |
-| Evals | ✅ | eval/run.sh:1 (surfaces 43, golden 14 tasks pass^3) gating CI .github/workflows/ci.yml:38 |
+| Evals | ✅ | eval/run.sh:1 (surfaces 43, golden 16 tasks pass^3) gating CI .github/workflows/ci.yml:38 |
 | Observability | ✅ | src/run-log.ts:22 (append-only logs/runs.jsonl, failures included) + status JSON src/ceo.ts:293 + .claude/hooks/audit-log.sh |
 | Sandbox/Infra | ✅ | src/sandbox.ts:78 (E2B microVM runs the real loader; e2b dependency package.json) |
 | Self-improvement | ✅ | dsip.json:1 (L2) + .github/workflows/improve.yml (nightly loop) + scripts/improve.mjs |

@@ -93,13 +93,6 @@ export async function capturePaneOutput(
   );
 }
 
-export function getPaneActivity(session: string, paneIndex: number): number {
-  const ts = run(
-    `tmux display-message -t "${session}:0.${paneIndex}" -p "#{pane_last_activity}" 2>/dev/null`,
-  );
-  return ts ? parseInt(ts, 10) : 0;
-}
-
 export function getPaneCount(session: string): number {
   const output = run(
     `tmux list-panes -t "${session}:0" -F "#{pane_index}" 2>/dev/null`,

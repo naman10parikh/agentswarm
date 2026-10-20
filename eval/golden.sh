@@ -5,7 +5,8 @@
 # Everything runs for real (the TypeScript CLI, the CEO loop, tmux, the MCP server) with two safety measures:
 #   - tmux is a shim that adds `-L <private socket>`, so the user's own tmux server is never touched;
 #   - `claude` is a stand-in agent (first on PATH, panes start bash without rc files) that prints the completion
-#     signal its prompt asks for, or never finishes when told NEVER-FINISH. No model is ever called.
+#     signal its prompt asks for, never finishes when told NEVER-FINISH, or prints a line every half second when
+#     told KEEP-TALKING. No model is ever called.
 # The private server numbers windows and panes from 1, as agentgrid's installer configures tmux, so the swarm's own
 # numbering is tested too. Pass^k: the whole lifecycle must pass K rounds in a row (default 3).
 #
@@ -35,6 +36,7 @@ cat > "$TMP/bin/claude" <<'SH'
 # Stand-in coding agent: records its arguments, then prints the signal its prompt asks for, or never finishes.
 printf '%s\n' "$*" >> "$AS_EVAL_ARGV"
 case "$*" in *NEVER-FINISH*) sleep 600; exit 0 ;; esac
+case "$*" in *KEEP-TALKING*) i=0; while :; do i=$((i+1)); echo "working $i"; sleep 0.5; done ;; esac
 sleep 1
 printf '%s\n' "$*" | sed -n 's/.*Say "\([^"]*: DONE\)" when finished.*/\1/p'
 sleep 600
@@ -170,6 +172,23 @@ PY
     if [ "$BLOCKED" = "pending" ] && grep -q "Upstream: DONE" "$AS_EVAL_ARGV" && ! grep -q "Downstream" "$AS_EVAL_ARGV"; then
       ok "dependent-never-starts-early-$RUNNER"
     else bad "dependent-never-starts-early-$RUNNER" "downstream=$BLOCKED argv: $(tr '\n' ' ' < "$AS_EVAL_ARGV" | head -c 200)"; fi
+  done
+
+  # G10: a pane that keeps printing stays running and a silent one turns idle after idle_timeout, in both runners.
+  for RUNNER in ts sh; do
+    if [ "$RUNNER" = sh ] && ! python3 -c "import yaml" 2>/dev/null; then
+      echo "  SKIP  r$ROUND idle-means-silent-$RUNNER: the bash runner needs python3 with PyYAML"; continue
+    fi
+    if [ "$RUNNER" = ts ]; then (cd "$TMP/work" && exec $CLI run "$ROOT/eval/fixtures/idle.yaml" > "$TMP/idle.out" 2>&1) &
+    else (cd "$TMP/work" && exec bash "$ROOT/src/cli.sh" run "$ROOT/eval/fixtures/idle.yaml" > "$TMP/idle.out" 2>&1) &
+    fi
+    IDLE_PID=$!
+    i=0; until [ "$(status_field agentswarm-golden-idle "[v['status'] for v in d['vps']][1]")" = "idle" ] || [ "$i" -ge 75 ]; do sleep 0.2; i=$((i+1)); done
+    IDLE="$(status_field agentswarm-golden-idle "[v['status'] for v in d['vps']]")"
+    kill "$IDLE_PID" 2>/dev/null; wait "$IDLE_PID" 2>/dev/null
+    tmux kill-session -t agentswarm-golden-idle >/dev/null 2>&1; rm -f /tmp/agentswarm-agentswarm-golden-idle-status.json
+    if [ "$IDLE" = "['running', 'idle']" ]; then ok "idle-means-silent-$RUNNER"
+    else bad "idle-means-silent-$RUNNER" "statuses=$IDLE"; fi
   done
 
   # G9: the bash runner runs the chain to done: it holds Beta and Gamma, then starts each once its dependency is done.

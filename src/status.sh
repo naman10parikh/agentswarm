@@ -32,27 +32,21 @@ check_pane_done() {
   return 1  # Still running
 }
 
-# Check if a pane is idle (no new output for N seconds)
-# Uses tmux activity tracking
+# Check if a pane is idle: its last 30 lines have not changed for more than N seconds.
+# tmux keeps no activity time per pane, so each look is kept in AS_SEEN_<pane> (its time in AS_SEEN_AT_<pane>) and
+# compared with the next. The runner's loop calls this directly, so the two variables last between polls.
 check_pane_idle() {
   local session="$1" pane="$2" idle_timeout="$3"
-
-  # Get pane activity timestamp
-  local activity
-  activity=$(tmux display-message -t "${session}:0.${pane}" -p '#{pane_last_activity}' 2>/dev/null || echo "0")
-
-  if [ "$activity" = "0" ]; then
-    return 1  # Can't determine
-  fi
-
-  local now
+  local seen="AS_SEEN_${pane}" at="AS_SEEN_AT_${pane}" output now
+  output=$(tmux capture-pane -t "${session}:0.${pane}" -p -S -30 2>/dev/null) || return 1  # Can't determine
   now=$(date +%s)
-  local elapsed=$((now - activity))
 
-  if [ "$elapsed" -gt "$idle_timeout" ]; then
-    return 0  # Idle
+  if [ -z "${!at-}" ] || [ "${!seen-}" != "$output" ]; then
+    printf -v "$seen" '%s' "$output"
+    printf -v "$at" '%s' "$now"
+    return 1  # New output: active
   fi
-  return 1  # Active
+  [ $((now - ${!at})) -gt "$idle_timeout" ]  # 0 when idle
 }
 
 # Get the last N lines from a pane

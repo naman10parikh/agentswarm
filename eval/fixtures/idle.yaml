@@ -1,0 +1,21 @@
+# Golden fixture: Talker keeps printing and must stay running; Silent prints nothing and must turn idle.
+swarm:
+  name: golden-idle
+  session: agentswarm-golden-idle
+  poll_interval: 1
+  max_runtime: 2
+  idle_timeout: 2
+
+ceo:
+  prompt: |
+    You are the CEO.
+
+vps:
+  - role: Talker
+    pane: 1
+    prompt: |
+      KEEP-TALKING. Say "Talker: DONE" when finished.
+  - role: Silent
+    pane: 2
+    prompt: |
+      NEVER-FINISH. Say "Silent: DONE" when finished.
