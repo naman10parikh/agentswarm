@@ -13,13 +13,13 @@ pnpm install            # install deps
 pnpm build              # tsc → dist/  (required before the bin works)
 node dist/ceo.js --help # the agentswarm CLI
 
-# or after global install:  npm install -g agentswarm  →  agentswarm --help
+# or put the commands on your PATH:  npm install -g .  →  agentswarm --help
 ```
 
 ## First swarm (3 commands)
 
 ```bash
-agentswarm init                       # writes a starter swarm.yaml
+agentswarm-sh init                    # writes a starter swarm.yaml (bash CLI)
 agentswarm validate swarm.yaml        # prints the exact error if anything is wrong
 agentswarm run --dry swarm.yaml       # preview the deployment — no tmux session created
 agentswarm run swarm.yaml             # deploy for real; agentswarm status / stop to manage
@@ -34,7 +34,7 @@ agentswarm run examples/content-swarm.yaml   # Research → Writer → Editor �
 ## Bash CLI (zero build step, tmux-native)
 
 ```bash
-bash install.sh                                  # installs `agentswarm-sh` into ~/.local/bin
+bash install.sh                                  # installs the bash CLI as `agentswarm` in ~/.local/bin
 pip3 install pyyaml                              # the bash path needs python3 + PyYAML
 bash src/cli.sh validate examples/oss-pipeline.yaml
 ```
@@ -43,6 +43,7 @@ bash src/cli.sh validate examples/oss-pipeline.yaml
 
 ```bash
 pnpm test    # vitest — config loader + validation paths (keep green)
+pnpm eval    # every surface + golden swarms on a private tmux server (keep green)
 pnpm lint    # tsc --noEmit
 ```
 

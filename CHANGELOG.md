@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- A VP prompt now reaches `claude` as one single-quoted argument, so `$(...)` and backticks in a swarm.yaml never run
+  in the pane's shell (both CLIs).
+- A VP is done only when a line of its pane is exactly `{Role}: DONE`; the echoed prompt no longer counts as done.
+- The swarm session numbers its window and panes from 0 even when tmux is configured to start at 1.
+- MCP tool results use the `content` shape that MCP clients read.
+- Every CLI run is logged, including runs that end in an error.
+- `agentswarm-sh` finds its helper scripts when npm installs it as a symlink.
+- `sandbox-run` runs the real loader inside the VM, so it rejects what `validate` rejects.
+
+### Added
+
+- `agentswarm-mcp` bin, a `prepare` script (the CLI runs straight from GitHub), a Claude Code plugin with a
+  `swarm-guard` hook and two sub-agents, a Gemini CLI extension and an A2A agent card.
+- Evals (`pnpm eval`: surfaces and golden swarms with pass^3) in CI, and a nightly improvement loop that writes
+  proposals.
+
 ## 0.2.0
 
 ### Added
