@@ -6,7 +6,7 @@ import { writeFileSync, readFileSync } from "node:fs";
 import { loadSwarmConfig } from "./loader.js";
 import { recordRun, readRuns } from "./run-log.js";
 import { searchMemory } from "./memory-search.js";
-import { sandboxRun } from "./sandbox.js";
+import { isDoneSignal, vpLaunchCommand } from "./vp.js";
 import {
   hasTmux,
   sessionExists,
@@ -99,12 +99,6 @@ async function deploy(configPath: string, dryRun: boolean): Promise<void> {
     // Name the pane
     renamePane(swarm.session, paneIndex, vp.role);
 
-    // Build the claude command
-    const promptOneLine = vp.prompt
-      .replace(/\n/g, " ")
-      .replace(/"/g, '\\"')
-      .trim();
-
     // Check if VP has unmet dependencies
     const hasDeps = vp.depends_on && vp.depends_on.length > 0;
     const initialStatus: VpStatus = hasDeps ? "pending" : "deploying";
@@ -121,8 +115,7 @@ async function deploy(configPath: string, dryRun: boolean): Promise<void> {
 
     if (!hasDeps) {
       // Deploy immediately
-      const cmd = `claude --dangerously-skip-permissions "${promptOneLine}"`;
-      sendKeys(swarm.session, paneIndex, cmd);
+      sendKeys(swarm.session, paneIndex, vpLaunchCommand(vp.prompt));
       state.vps[i].status = "running";
       state.vps[i].deployedAt = new Date().toISOString();
       log(`  ${chalk.green("▶")} Deployed: ${vp.role} → pane ${paneIndex}`);
@@ -191,12 +184,7 @@ async function monitorLoop(state: SwarmState): Promise<void> {
         );
 
         if (depsReady) {
-          const promptOneLine = vp.config.prompt
-            .replace(/\n/g, " ")
-            .replace(/"/g, '\\"')
-            .trim();
-          const cmd = `claude --dangerously-skip-permissions "${promptOneLine}"`;
-          sendKeys(sessionName, vp.paneIndex, cmd);
+          sendKeys(sessionName, vp.paneIndex, vpLaunchCommand(vp.config.prompt));
           vp.status = "running";
           vp.deployedAt = new Date().toISOString();
           deployedPending = true;
@@ -209,8 +197,7 @@ async function monitorLoop(state: SwarmState): Promise<void> {
       const output = await capturePaneOutput(sessionName, vp.paneIndex, 30);
       vp.outputLines = output.split("\n").slice(-10);
 
-      const donePattern = `${vp.config.role}: DONE`;
-      if (output.includes(donePattern)) {
+      if (isDoneSignal(output, vp.config.role)) {
         vp.status = "done";
         vp.doneAt = new Date().toISOString();
         doneCount++;
@@ -517,6 +504,8 @@ program
   .argument("<config>", "Path to swarm.yaml")
   .action(async (configPath: string) => {
     log(`Booting E2B sandbox to validate ${chalk.bold(configPath)} in isolation...`);
+    // Loaded only here: the e2b SDK needs a recent Node, and every other command must run on Node 18.
+    const { sandboxRun } = await import("./sandbox.js");
     const res = await sandboxRun(configPath);
     log(`Sandbox booted: ${chalk.green(res.sandboxId)}`);
     if (res.stdout) console.log(chalk.dim(`  ${res.stdout}`));
@@ -543,13 +532,21 @@ function logRun(outcome: "ok" | "error", error?: string): void {
   });
 }
 
-// commander's async actions resolve on the returned promise; record the outcome
-// once parsing + the action settle, so EVERY CLI invocation writes a run entry.
+// Record every invocation exactly once, including the ones that end in process.exit(1) inside an action
+// (an invalid config, a failed sandbox run): failures are the runs a trail most needs.
+let logged = false;
+function logOnce(outcome: "ok" | "error", error?: string): void {
+  if (logged) return;
+  logged = true;
+  logRun(outcome, error);
+}
+process.on("exit", (code) => logOnce(code === 0 ? "ok" : "error", code === 0 ? undefined : `exit ${code}`));
+
 program
   .parseAsync()
-  .then(() => logRun("ok"))
+  .then(() => logOnce("ok"))
   .catch((e) => {
-    logRun("error", e instanceof Error ? e.message : String(e));
+    logOnce("error", e instanceof Error ? e.message : String(e));
     err(e instanceof Error ? e.message : String(e));
     process.exit(1);
   });

@@ -1,0 +1,13 @@
+{
+  "description": "agentswarm swarm guard: stops an agent from ending every running swarm (tmux kill-server) or stealing the person's focus (tmux select-pane).",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/swarm-guard.mjs\"" }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Hive",
+  "description": "One YAML file, a swarm of expert agents, no idle panes.",
+  "url": "https://github.com/naman10parikh/agentswarm",
+  "version": "0.2.0",
+  "provider": {
+    "organization": "Naman Parikh",
+    "url": "https://github.com/naman10parikh"
+  },
+  "capabilities": {
+    "streaming": false
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "author-swarm",
+      "name": "author-swarm",
+      "description": "Turn a multi-step goal into a valid swarm.yaml."
+    },
+    {
+      "id": "run-swarm",
+      "name": "run-swarm",
+      "description": "Deploy a validated swarm and follow it to done."
+    },
+    {
+      "id": "debug-swarm",
+      "name": "debug-swarm",
+      "description": "Find why a swarm is stuck, idle, deadlocked or never finishing."
+    }
+  ]
+}

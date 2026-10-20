@@ -22,6 +22,9 @@ jobs:
           node-version: 20
           cache: pnpm
 
+      - name: Install tmux
+        run: sudo apt-get update && sudo apt-get install -y tmux
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
 
@@ -30,3 +33,6 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      - name: Eval (surfaces, golden swarms with stand-in agents, pass^3)
+        run: pnpm eval

@@ -1,0 +1,17 @@
+{
+  "name": "agentswarm",
+  "version": "0.2.0",
+  "description": "One YAML file, a swarm of expert agents, no idle panes.",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "agentswarm": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "-p",
+        "github:naman10parikh/agentswarm",
+        "agentswarm-mcp"
+      ]
+    }
+  }
+}

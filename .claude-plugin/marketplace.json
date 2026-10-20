@@ -1,0 +1,14 @@
+{
+  "name": "agentswarm",
+  "owner": {
+    "name": "Naman Parikh",
+    "url": "https://github.com/naman10parikh"
+  },
+  "plugins": [
+    {
+      "name": "agentswarm",
+      "source": "./",
+      "description": "One YAML file, a swarm of expert agents, no idle panes."
+    }
+  ]
+}

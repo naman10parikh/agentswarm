@@ -5,7 +5,8 @@
   "type": "module",
   "bin": {
     "agentswarm": "dist/ceo.js",
-    "agentswarm-sh": "src/cli.sh"
+    "agentswarm-sh": "src/cli.sh",
+    "agentswarm-mcp": "dist/mcp-server.js"
   },
   "main": "./dist/ceo.js",
   "types": "./dist/ceo.d.ts",
@@ -16,16 +17,25 @@
     "install.sh",
     "README.md",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "AGENTS.md",
+    "llms.txt",
+    "skills/",
+    "hooks/",
+    "identity/",
+    "memory/MEMORY.md",
+    "memory/LEARNINGS.md"
   ],
   "scripts": {
     "build": "tsc",
+    "prepare": "tsc",
     "dev": "tsc --watch",
     "ceo": "tsx src/ceo.ts",
     "start": "tsx src/ceo.ts",
     "validate": "bash src/cli.sh validate examples/content-swarm.yaml",
     "test": "vitest run",
     "test:watch": "vitest",
+    "eval": "bash eval/run.sh",
     "lint": "tsc --noEmit",
     "prepublishOnly": "pnpm build && pnpm test"
   },
@@ -36,7 +46,11 @@
     "tmux",
     "agentgrid",
     "claude-code",
-    "multi-agent"
+    "multi-agent",
+    "agent-native",
+    "mcp",
+    "agent-skills",
+    "self-improving"
   ],
   "author": "Naman Parikh",
   "license": "MIT",

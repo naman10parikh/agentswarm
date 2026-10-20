@@ -1,0 +1,21 @@
+# Golden fixture: Worker finishes; Stuck never does, although its prompt (shown in its pane) names its signal.
+swarm:
+  name: golden-stuck
+  session: agentswarm-golden-stuck
+  poll_interval: 1
+  max_runtime: 2
+  idle_timeout: 300
+
+ceo:
+  prompt: |
+    You are the CEO.
+
+vps:
+  - role: Worker
+    pane: 1
+    prompt: |
+      Say "Worker: DONE" when finished.
+  - role: Stuck
+    pane: 2
+    prompt: |
+      NEVER-FINISH. Say "Stuck: DONE" when finished.

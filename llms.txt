@@ -1,15 +1,47 @@
 # agentswarm
 
-> CEO orchestration for AI agent swarms. Define VP roles in a swarm.yaml, deploy each
+> One YAML file, a swarm of expert agents, no idle panes. agentswarm is an agent-native, self-improving agent
+> employee, Hive, whose job is dispatch: it reads a swarm.yaml, starts one coding agent per tmux pane, starts each
+> role only when the roles it depends on are done, and tracks every role to done. Use it from any coding agent
+> through its MCP server, its skills, its Claude Code plugin or its command line.
 
-## Documentation
+## Start here
 
-- [README.md](README.md): CEO orchestration for AI agent swarms. Define VP roles in a swarm.yaml, deploy each
-- [AGENTS.md](AGENTS.md): > How agents (and contributors) operate inside this repo. agentswarm is the CEO layer
-- [CLAUDE.md](CLAUDE.md): > Forged from Energy via harness-forge (CP103). One repo = one recursively self-improving
-- [QUICKSTART.md](QUICKSTART.md): agentswarm is the CEO layer for AI agent swarms: define VP roles in a swarm.yaml, deploy
+- [AGENTS.md](AGENTS.md): what it does, every tool and how to call it, what not to do
+- [README.md](README.md): install, quick start, the swarm.yaml reference
+- [identity/SOUL.md](identity/SOUL.md): Hive, the agent employee: mission, personality, boundaries
 
-## Notes
+## Skills
 
-- This file follows the llms.txt convention (https://llmstxt.org) so AI agents can
-  discover this repo's docs without scraping. Generated from the README + key docs.
+- [skills/author-swarm/SKILL.md](skills/author-swarm/SKILL.md): turn a goal into a valid swarm.yaml
+- [skills/run-swarm/SKILL.md](skills/run-swarm/SKILL.md): deploy a swarm and follow it to done
+- [skills/debug-swarm/SKILL.md](skills/debug-swarm/SKILL.md): find why a swarm is stuck, idle or never finishing
+
+## MCP tools
+
+- [src/mcp-server.ts](src/mcp-server.ts): the `agentswarm-mcp` server, 3 tools: validate_swarm, swarm_status, memory_search
+- [.mcp.json](.mcp.json): the server's one-line config for any MCP client
+
+## Plugin and sub-agents
+
+- [.claude-plugin/plugin.json](.claude-plugin/plugin.json): the Claude Code plugin (skills, sub-agents, MCP server, hook)
+- [hooks/hooks.json](hooks/hooks.json): the swarm-guard hook, which blocks commands that would end every swarm or steal focus
+- [.claude/agents/swarm-designer.md](.claude/agents/swarm-designer.md): sub-agent that writes and validates a swarm.yaml for a goal
+- [.claude/agents/swarm-doctor.md](.claude/agents/swarm-doctor.md): sub-agent that diagnoses a stuck swarm
+- [gemini-extension.json](gemini-extension.json): the Gemini CLI extension
+- [.well-known/agent-card.json](.well-known/agent-card.json): the A2A agent card
+
+## How it improves itself
+
+- [dsip.json](dsip.json): the self-improvement contract and its honest level
+- [eval/run.sh](eval/run.sh): the evals (surfaces, golden swarms with pass^3)
+- [scripts/improve.mjs](scripts/improve.mjs): one turn of the nightly improvement loop
+- [memory/MEMORY.md](memory/MEMORY.md): the memory index
+- [memory/LEARNINGS.md](memory/LEARNINGS.md): every correction, kept as a rule
+
+## Docs
+
+- [examples/content-swarm.yaml](examples/content-swarm.yaml): a four-role content pipeline
+- [examples/oss-pipeline.yaml](examples/oss-pipeline.yaml): a three-role pipeline from finding an open-source project idea to its scaffold
+- [CHANGELOG.md](CHANGELOG.md): what changed in each version
+- [CONTRIBUTING.md](CONTRIBUTING.md): how to contribute

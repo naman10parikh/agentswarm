@@ -89,6 +89,10 @@ for vp in vps:
   # Create tmux session with pane 0 (CEO)
   log "Creating tmux session: ${session}"
   tmux new-session -d -s "$session" -x 200 -y 50
+  # Address the window and panes from 0, whatever the user's tmux.conf says (agentgrid's installer sets 1).
+  tmux set-option -t "$session" base-index 0 2>/dev/null || true
+  tmux move-window -r -t "$session" 2>/dev/null || true
+  tmux set-window-option -t "${session}:0" pane-base-index 0 2>/dev/null || true
 
   # Create VP panes
   local vp_specs=()
@@ -130,10 +134,13 @@ for vp in vps:
 
     # Send the claude command with the prompt to the pane
     # Escape the prompt for tmux send-keys
-    local escaped_prompt
-    escaped_prompt=$(echo "$prompt" | head -5 | tr '\n' ' ' | sed 's/"/\\"/g' | cut -c1-500)
+    # The prompt goes to the pane's shell as one single-quoted argument, so $(...) and backticks in a
+    # swarm.yaml written by someone else are never run.
+    local one_line quoted_prompt
+    one_line=$(echo "$prompt" | head -5 | tr '\n' ' ' | cut -c1-500)
+    quoted_prompt="'$(printf '%s' "$one_line" | sed "s/'/'\\\\''/g")'"
 
-    tmux send-keys -t "${session}:0.${i}" "claude --dangerously-skip-permissions \"${escaped_prompt}\"" Enter
+    tmux send-keys -t "${session}:0.${i}" "claude --dangerously-skip-permissions ${quoted_prompt}" Enter
     log "  Deployed to pane ${i}: ${role}"
     sleep 1  # Brief pause between deployments
   done

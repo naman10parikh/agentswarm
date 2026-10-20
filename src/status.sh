@@ -16,7 +16,9 @@ check_pane_done() {
   local output
   output=$(tmux capture-pane -t "${session}:0.${pane}" -p -S -50 2>/dev/null || echo "")
 
-  if echo "$output" | grep -qF "$pattern"; then
+  # The signal must be a whole line (after a reply bullet, before a full stop): the pane also shows the
+  # prompt, which says 'Say "{Role}: DONE" when finished', and that must not count.
+  if printf '%s\n' "$output" | sed -e 's/^[^A-Za-z0-9]*//' -e 's/[.!]*[[:space:]]*$//' | grep -qxF "$pattern"; then
     return 0  # Done
   fi
   return 1  # Still running

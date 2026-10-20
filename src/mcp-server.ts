@@ -28,6 +28,13 @@ function send(obj: unknown): void {
 function ok(id: unknown, result: unknown): void {
   send({ jsonrpc: "2.0", id, result });
 }
+/**
+ * A tools/call result in the MCP shape: the data as JSON text in `content` (what every client reads),
+ * and as `structuredContent` for clients that take structured results.
+ */
+function toolResult(id: unknown, data: Record<string, unknown>): void {
+  ok(id, { content: [{ type: "text", text: JSON.stringify(data, null, 2) }], structuredContent: data });
+}
 function rpcErr(id: unknown, code: number, message: string): void {
   send({ jsonrpc: "2.0", id, error: { code, message } });
 }
@@ -91,7 +98,7 @@ function handleValidateSwarm(id: unknown, args: Record<string, unknown>): void {
   }
   try {
     const cfg = loadSwarmConfig(configPath);
-    ok(id, {
+    toolResult(id, {
       valid: true,
       name: cfg.swarm.name,
       session: cfg.swarm.session,
@@ -104,7 +111,7 @@ function handleValidateSwarm(id: unknown, args: Record<string, unknown>): void {
       })),
     });
   } catch (e) {
-    ok(id, {
+    toolResult(id, {
       valid: false,
       error: e instanceof Error ? e.message : String(e),
     });
@@ -124,9 +131,9 @@ function handleSwarmStatus(id: unknown, args: Record<string, unknown>): void {
       ? data.vps
       : [];
     const done = vps.filter((v) => v.status === "done").length;
-    ok(id, { ...data, doneCount: done, total: vps.length });
+    toolResult(id, { ...data, doneCount: done, total: vps.length });
   } catch {
-    ok(id, {
+    toolResult(id, {
       found: false,
       error: `No status file for session "${session}" — is the swarm running?`,
     });
@@ -140,7 +147,7 @@ function handleMemorySearch(id: unknown, args: Record<string, unknown>): void {
     return;
   }
   const limit = typeof args["limit"] === "number" ? args["limit"] : 5;
-  ok(id, { query, hits: searchMemory(query, limit) });
+  toolResult(id, { query, hits: searchMemory(query, limit) });
 }
 
 // ─── stdio JSON-RPC loop ───

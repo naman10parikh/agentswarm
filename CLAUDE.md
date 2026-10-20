@@ -1,39 +1,35 @@
-# agentswarm — Agent-Native Harness
+@AGENTS.md
 
-> Forged from Energy via harness-forge (CP103). One repo = one recursively self-improving
-> agent-native harness. Energy is the control center; this is a self-contained flavor.
+# Claude Code in agentswarm
 
-## What this is
-agentswarm is the **CEO layer** for AI agent swarms. agentgrid (or raw tmux) can spawn a
-grid of Claude Code panes — but who coordinates them? agentswarm reads a `swarm.yaml`,
-deploys a VP prompt into each pane, watches for completion signals (`{Role}: DONE`),
-resolves `depends_on` dependencies so VPs start in the right order, detects idle panes,
-and writes a live JSON status file. It is a fractal-delegation orchestrator: one CEO,
-N VPs, each in its own pane with its own model (opus/sonnet/haiku).
+Everything any coding agent needs is in `AGENTS.md`, imported above. This file holds only what is specific to Claude
+Code.
 
-It ships as a **dual-implementation CLI**:
-- **TypeScript** (`src/ceo.ts` → `dist/ceo.js`, bin `agentswarm`) — self-contained, only
-  needs Node. This is the primary, portable path (no Python required).
-- **Bash** (`src/cli.sh` + `orchestrate.sh`/`parse-yaml.sh`/`status.sh`, bin `agentswarm-sh`)
-  — zero build step, tmux-native; requires `bash`, `tmux`, and `python3` + PyYAML.
+## What loads when you open this repository
 
-## Product layout (standard CLI)
-- `src/` — product source (TS modules + bash scripts). `dist/` — compiled JS (built by `tsc`).
-- `examples/` — sample `swarm.yaml` configs (content pipeline, OSS pipeline).
-- `test/` — Vitest unit tests (config loader + validation). Run with `pnpm test`.
-- `install.sh` — installs the bash CLI into `~/.local/bin`.
+- **Hooks** (`.claude/settings.json`): `PreToolUse` on Bash runs `.claude/hooks/block-dangerous-commands.cjs`, and on
+  Read, Edit, Write and Bash runs `.claude/hooks/protect-secrets.cjs`, which keeps `.env` files and keys out of the
+  session; `PostToolUse` on Write, Edit and Bash runs `.claude/hooks/audit-log.sh`, which appends one line per change
+  to `.claude/audit.jsonl` (gitignored).
+- **Sub-agents** (`.claude/agents/`): `swarm-designer` and `swarm-doctor` are agentswarm's own; the other seven
+  (`architect`, `code-reviewer`, `test-writer` and the rest) are general reviewers for work on this codebase.
+- **MCP** (`.mcp.json`): only agentswarm's own server, `agentswarm-mcp`. The inherited development servers (GitHub,
+  Context7, a file-backed memory and an Obsidian vault over `brain/`) need a token or a relative path, so they live in
+  `.mcp.dev.json`. Load them with `claude --mcp-config .mcp.dev.json`.
+- **Rules** (`.claude/rules/`) are glob-loaded every session.
 
-## Harness components (the inherited formula)
-This repo also carries the Energy agent-native harness so it can improve itself:
-identity/ (SOUL/BRAND/HEARTBEAT) · memory/ + brain/ (long-term memory + Obsidian graph) ·
-skills/ + .claude/skills · hooks/ + .claude/hooks · .claude/agents (subagents) ·
-.mcp.json (MCP plugins) · eval/ (eval + observer). The **product** is the CLI in `src/`;
-the harness layer is how the repo maintains and evolves itself. Same formula as every
-Energy harness, different data.
+## The plugin
 
-## Operating model
-You are the user's co-founder. Act, don't ask. Self-improve every session. Test as a user.
-Inherited rules in .claude/rules/ are glob-loaded every session.
+`.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` make this repository a Claude Code plugin: the
+skills in `skills/`, the two sub-agents, the MCP server and the `swarm-guard` hook in `hooks/hooks.json`. Check it with
+`claude plugin validate .` before you change any of those files.
 
-## Commit convention
-feat(skill): · feat(employee): · feat(company): — so git snap-back works at all 3 granularities.
+## Working here
+
+- You may be running inside the person's tmux. Never run `agentswarm run` against their server to test a change: it
+  opens a session and starts real agents. Use `pnpm eval`, which runs every swarm on a private tmux server with
+  stand-in agents.
+- Follow the commit grammar in `AGENTS.md` (`feat(skill):`, `feat(employee):`, `feat(company):` and the standard
+  scopes).
+- Act, then test as a user: `pnpm build && pnpm test && pnpm eval`, then the command you changed.
+- When you fix an error, add it to `memory/LEARNINGS.md` as what broke, the root cause, and the rule.

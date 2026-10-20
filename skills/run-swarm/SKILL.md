@@ -35,7 +35,8 @@ Invoke when the user has a config in hand and wants it running: "deploy `content
    enters the monitoring loop. Attach to watch live: `tmux attach -t <session>`.
 5. **Monitor progress without attaching.** From another shell: `agentswarm status <session>`
    for the per-VP RUNNING/IDLE/DONE summary, or read the machine-readable
-   `/tmp/agentswarm-<session>-status.json` (the programmatic public API). The CEO marks a VP
+   `/tmp/agentswarm-<session>-status.json` (the programmatic public API). From another agent, the
+   MCP tool `swarm_status` (argument `session`) returns the same file as JSON. The CEO marks a VP
    `done` only on the exact `{Role}: DONE` string and deploys a `pending` VP only once all its
    deps are done.
 6. **Watch for the two stall modes.** A pane flagged `IDLE` (no output past `idle_timeout`) or

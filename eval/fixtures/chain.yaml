@@ -1,0 +1,30 @@
+# Golden fixture: a three-step chain (Alpha -> Beta -> Gamma). Alpha's prompt also carries shell syntax that
+# must reach the agent as plain text and never run.
+swarm:
+  name: golden-chain
+  session: agentswarm-golden-chain
+  poll_interval: 1
+  max_runtime: 2
+  idle_timeout: 300
+
+ceo:
+  prompt: |
+    You are the CEO of a three-step chain.
+
+vps:
+  - role: Alpha
+    pane: 1
+    prompt: |
+      Step one. Leave this text alone: $(touch pwned-by-swarm) and `touch pwned-by-backticks`.
+      Say "Alpha: DONE" when finished.
+    depends_on: []
+  - role: Beta
+    pane: 2
+    prompt: |
+      Step two. Say "Beta: DONE" when finished.
+    depends_on: [Alpha]
+  - role: Gamma
+    pane: 3
+    prompt: |
+      Step three. Say "Gamma: DONE" when finished.
+    depends_on: [Beta]

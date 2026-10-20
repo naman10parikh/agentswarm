@@ -21,11 +21,13 @@ fewer done than expected.
    duplicate role, a missing section, or a `depends_on` pointing at an undefined role aborts
    the run. Fix and re-deploy. *Symptom:* the CLI errored at `run` time.
 2. **Missing completion signal (VP works but is never marked done).** The CEO only marks a VP
-   done when its pane output contains the exact string `{Role}: DONE`. Read the pane:
+   done when a line of its pane output is exactly `{Role}: DONE`. Read the pane:
    `tmux capture-pane -t <session> -p` (or `agentswarm status <session>` for the summary). If
    the agent finished its work but never printed `Role: DONE`, the prompt is missing the
    signal instruction — every VP prompt must end with `Say "{Role}: DONE" on your last line`.
-   Note the match is a substring check and case-sensitive: `role: done` does NOT match.
+   The signal must stand on its own line (a leading bullet and a final `.` or `!` are fine),
+   and the match is case-sensitive: `role: done` does NOT match. The prompt itself, echoed in
+   the pane, never counts, because there the signal sits inside a longer line.
 3. **Dependency deadlock (downstream VP never deploys).** A `pending` VP only deploys once
    *every* role in its `depends_on` is `done`. If an upstream VP is stuck (cause #2) or a
    `depends_on` name is misspelled so it can never be satisfied, the downstream VP waits
@@ -44,6 +46,7 @@ agentswarm status <session>                 # per-VP RUNNING/IDLE/DONE summary
 cat /tmp/agentswarm-<session>-status.json   # machine-readable state (public API)
 tmux capture-pane -t <session> -p | tail -30 # raw tail of the focused pane
 agentswarm log --limit 20                    # was the last run ok or error?
+agentswarm memory-search "never finishes"    # a fix this repository already learned (MCP: memory_search)
 ```
 
 ## Output

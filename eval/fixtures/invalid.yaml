@@ -1,0 +1,17 @@
+# Golden fixture: two errors validate must name (a duplicate role, and a dependency on a role that does not exist).
+swarm:
+  name: golden-invalid
+  session: agentswarm-golden-invalid
+ceo:
+  prompt: |
+    You are the CEO.
+vps:
+  - role: Alpha
+    pane: 1
+    prompt: |
+      One.
+    depends_on: [Missing]
+  - role: Alpha
+    pane: 2
+    prompt: |
+      Two.

@@ -32,6 +32,11 @@ export function killSession(session: string): void {
 
 export function createSession(session: string, width = 220, height = 55): void {
   run(`tmux new-session -d -s "${session}" -x ${width} -y ${height}`);
+  // The swarm addresses its window and panes from index 0. A user's tmux.conf may start them at 1 (agentgrid's
+  // installer does), so number this session from 0 whatever the global setting.
+  run(`tmux set-option -t "${session}" base-index 0`);
+  run(`tmux move-window -r -t "${session}"`);
+  run(`tmux set-window-option -t "${session}:0" pane-base-index 0`);
 }
 
 export function splitPane(session: string, direction: "h" | "v" = "h"): number {
