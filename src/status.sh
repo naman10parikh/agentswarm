@@ -191,5 +191,6 @@ write_status_json() {
   done
 
   json+=']}'
-  echo "$json" > "$outfile"
+  # Written to a temporary file, then renamed, so a reader never sees a half-written file.
+  echo "$json" > "$outfile.tmp" && mv -f "$outfile.tmp" "$outfile"
 }

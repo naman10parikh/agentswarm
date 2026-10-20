@@ -2,7 +2,7 @@
 
 import { Command } from "commander";
 import chalk from "chalk";
-import { writeFileSync, readFileSync } from "node:fs";
+import { writeFileSync, readFileSync, renameSync } from "node:fs";
 import { loadSwarmConfig } from "./loader.js";
 import { recordRun, readRuns } from "./run-log.js";
 import { searchMemory } from "./memory-search.js";
@@ -296,7 +296,9 @@ function writeStatusFile(state: SwarmState): void {
       doneAt: v.doneAt,
     })),
   };
-  writeFileSync(file, JSON.stringify(data, null, 2));
+  // Written to a temporary file, then renamed, so a reader never sees a half-written file.
+  writeFileSync(`${file}.tmp`, JSON.stringify(data, null, 2));
+  renameSync(`${file}.tmp`, file);
 }
 
 // ─── Helpers ───
