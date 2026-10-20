@@ -125,8 +125,7 @@ and an annotated example live in `README.md` and `examples/`.
    runs on Claude Code's default. Never fill in a model the file does not set.
 5. **The two implementations stay behavior-equivalent.** A change to deploy/poll/status logic in
    `src/ceo.ts` must be mirrored in the bash path (`orchestrate.sh`/`status.sh`) and vice versa.
-   `examples/*.yaml` must validate under both. Known gap: the bash path sends only the first five lines of each
-   prompt.
+   `examples/*.yaml` must validate under both.
 6. **Status JSON shape is a public API** (`/tmp/agentswarm-{session}-status.json`). Don't break
    the `{ timestamp, session, vps: [{ role, pane, status }] }` contract without a CHANGELOG note.
 7. **A prompt is text, never shell.** Both implementations pass it to `claude` as one single-quoted argument.

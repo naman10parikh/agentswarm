@@ -1,6 +1,7 @@
 # Golden fixture: a three-step chain (Alpha -> Beta -> Gamma). Alpha's prompt also carries shell syntax that
 # must reach the agent as plain text and never run. Alpha's model must reach the agent as --model; Beta and Gamma set
-# none, so their agents get no --model flag.
+# none, so their agents get no --model flag. Gamma's finish line is the sixth line of its prompt, so a runner that cut
+# a prompt short would never see Gamma finish.
 swarm:
   name: golden-chain
   session: agentswarm-golden-chain
@@ -28,5 +29,10 @@ vps:
   - role: Gamma
     pane: 3
     prompt: |
-      Step three. Say "Gamma: DONE" when finished.
+      Step three.
+      Read the brief.
+      Check the inputs.
+      Draft the result.
+      Review the draft.
+      Say "Gamma: DONE" when finished.
     depends_on: [Beta]

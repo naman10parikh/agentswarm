@@ -152,7 +152,7 @@ single-quoted argument, so shell syntax in it is text and never runs.
 | Path | Bin | Needs | When |
 | --- | --- | --- | --- |
 | **TypeScript** | `agentswarm` | Node 18 or newer, tmux | Default. Waits on `depends_on`, logs every run, has the MCP server. |
-| **Bash** | `agentswarm-sh` | bash, tmux, python3 with PyYAML | No build step. Also waits on `depends_on`. Sends only the first five lines of each prompt. |
+| **Bash** | `agentswarm-sh` | bash, tmux, python3 with PyYAML | No build step. Also waits on `depends_on`, and sends each prompt whole. |
 
 Both read the same `swarm.yaml`. To put only the bash CLI on your PATH, run `bash install.sh` in a clone: it checks
 for bash, tmux and python3, installs PyYAML if it is missing, and writes `~/.local/bin/agentswarm`, a wrapper for

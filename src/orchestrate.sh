@@ -127,16 +127,15 @@ for vp in vps:
   for (( i=0; i<vp_count; i++ )); do
     local role prompt model deps
     role=$(echo "$vps_json" | python3 -c "import json,sys; print(json.load(sys.stdin)[$i]['role'])")
-    prompt=$(echo "$vps_json" | python3 -c "import json,sys; print(json.load(sys.stdin)[$i]['prompt'])")
+    prompt=$(echo "$vps_json" | python3 -c "import json,re,sys; print(re.sub(r'\s*\n\s*', ' ', json.load(sys.stdin)[$i]['prompt']).strip())")
     model=$(echo "$vps_json" | python3 -c "import json,sys; print(json.load(sys.stdin)[$i]['model'])")
     deps=$(echo "$vps_json" | python3 -c "import json,sys; print('\\n'.join(json.load(sys.stdin)[$i]['depends_on']))")
 
-    # The prompt goes to the pane's shell as one single-quoted argument, so $(...) and backticks in a
-    # swarm.yaml written by someone else are never run. A model from the file goes through claude's own
-    # --model flag, quoted the same way; with none, claude uses its default model.
-    local one_line quoted_prompt model_flag=""
-    one_line=$(echo "$prompt" | head -5 | tr '\n' ' ' | cut -c1-500)
-    quoted_prompt="'$(printf '%s' "$one_line" | sed "s/'/'\\\\''/g")'"
+    # The whole prompt, joined into one line as the TypeScript runner joins it, goes to the pane's shell as one
+    # single-quoted argument, so $(...) and backticks in a swarm.yaml written by someone else are never run. A model
+    # from the file goes through claude's own --model flag, quoted the same way; with none, claude uses its default.
+    local quoted_prompt model_flag=""
+    quoted_prompt="'$(printf '%s' "$prompt" | sed "s/'/'\\\\''/g")'"
     if [ -n "$model" ]; then
       model_flag="--model '$(printf '%s' "$model" | sed "s/'/'\\\\''/g")' "
     fi
