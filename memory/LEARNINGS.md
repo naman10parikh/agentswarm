@@ -81,7 +81,7 @@ Every error → root cause → rule. Auto-compressed when >500 lines (memory-com
 - **Rule:** the sandbox runs the real loader (`dist/loader.js` and the `yaml` package, shipped from the install, in
   `src/sandbox.ts`). Check a sandbox path with a config that must fail, not only with one that passes.
 
-## 2026-10-20 — The plan printed a model and an order that never reached the agents
+## 2026-10-20: The plan printed a model and an order that never reached the agents
 
 - **What broke:** `validate` and `run --dry` printed each VP's model and dependencies, but neither runner passed the
   model to `claude`, and the bash runner started every VP at once. Its status also read the YAML `pane` number, one
